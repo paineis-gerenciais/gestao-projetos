@@ -32,25 +32,22 @@ service cloud.firestore {
       return ehAdminInicial()
         || (verificado() && exists(docAdmins()) && meuEmail() in get(docAdmins()).data.emails && !desativado());
     }
-    function cadastrado() {
-      return ehAdmin()
-        || (verificado() && exists(docUsuario(meuEmail())) && get(docUsuario(meuEmail())).data.ativo == true);
+    function usuarioAtivo() {
+      return verificado() && exists(docUsuario(meuEmail())) && get(docUsuario(meuEmail())).data.get('ativo', false) == true;
     }
+    function cadastrado() { return ehAdmin() || usuarioAtivo(); }
 
     // ---------- papéis ----------
     function nivel(p) {
-      return p == 'admin_grupo' ? 6 : p == 'escritorio' ? 5 : p == 'gestor' ? 4 : p == 'equipe' ? 3
-        : p == 'patrocinador' ? 2 : p == 'leitura' ? 1 : p == 'convidado' ? 0 : -1;
+      return p is string
+        ? {'admin_grupo': 6, 'escritorio': 5, 'gestor': 4, 'equipe': 3, 'patrocinador': 2, 'leitura': 1, 'convidado': 0}.get(p, -1)
+        : -1;
     }
-    function papelEm(mapa) { return mapa is map && meuEmail() in mapa ? mapa[meuEmail()] : ''; }
+    function papelEm(mapa) { return mapa is map ? mapa.get(meuEmail(), '') : ''; }
     function grupo(gid) { return get(/databases/$(database)/documents/grupos/$(gid)).data; }
     function nivelNoGrupo(gid) {
       return gid is string && gid != '' && exists(/databases/$(database)/documents/grupos/$(gid))
         ? nivel(papelEm(grupo(gid).membros)) : -1;
-    }
-    function membrosDepois(gid) {
-      return gid is string && gid != '' && existsAfter(/databases/$(database)/documents/grupos/$(gid))
-        ? getAfter(/databases/$(database)/documents/grupos/$(gid)).data.membrosEmails : [];
     }
     function excecoesValidas(mapa) {
       return mapa is map && mapa.values().hasOnly(['escritorio','gestor','equipe','patrocinador','leitura','convidado']);
@@ -60,6 +57,57 @@ service cloud.firestore {
         ? ['admin_grupo','escritorio','gestor','equipe','patrocinador','leitura','convidado']
         : ['admin_grupo','escritorio','gestor','equipe','patrocinador','leitura']);
     }
+    // ---------- nível de uma pessoa num projeto ----------
+    // O projeto tem um grupo DONO (grupoId) e até 4 grupos CONVIDADOS (gruposConvidados).
+    // membrosPorGrupo guarda, para cada um, a cópia dos membros do grupo (e-mail -> papel).
+    // Vale o MAIOR entre: papel no grupo dono, papel num grupo convidado (no máximo Gestor)
+    // e a exceção do projeto. Projetos antigos (sem membrosPorGrupo) usam "papeis".
+    // (As regras têm limite de expressões por pedido: daí os "let" e as contas enxutas.)
+    function maxN(a, b) { return a > b ? a : b; }
+    function minN(a, b) { return a < b ? a : b; }
+    function papelNaFatia(mp, g, eu) { return mp.get(g, {}).get(eu, ''); }
+    function nivelConvidadoI(mp, conv, i, eu) { return conv.size() > i ? nivel(papelNaFatia(mp, conv[i], eu)) : -1; }
+    function nivelConvidados(mp, conv, eu) {
+      return conv.size() == 0 ? -1
+        : minN(maxN(maxN(nivelConvidadoI(mp, conv, 0, eu), nivelConvidadoI(mp, conv, 1, eu)),
+                    maxN(nivelConvidadoI(mp, conv, 2, eu), nivelConvidadoI(mp, conv, 3, eu))), 4);
+    }
+    function nivelProjeto(h) {
+      let mp = h.get('membrosPorGrupo', null);
+      let eu = meuEmail();
+      return !(mp is map)
+        ? nivel(papelEm(h.get('papeis', {})))
+        : maxN(maxN(nivel(papelNaFatia(mp, h.get('grupoId', ''), eu)), nivel(h.get('excecoes', {}).get(eu, ''))),
+               nivelConvidados(mp, h.get('gruposConvidados', []), eu));
+    }
+    // a cópia de um grupo dentro do projeto só pode MUDAR para o que o grupo é de verdade
+    function fatiaCerta(mp, antes, g) {
+      return (antes is map && g in antes && antes[g] == mp[g])
+        || mp[g] == getAfter(/databases/$(database)/documents/grupos/$(g)).data.membros;
+    }
+    function fatiaCertaI(mp, antes, lista, i) { return lista.size() <= i || fatiaCerta(mp, antes, lista[i]); }
+    function chavesI(mp, lista, i) { return lista.size() > i ? mp[lista[i]].keys().toSet() : [].toSet(); }
+    // quem vê o projeto = exatamente as pessoas dos grupos (dono e convidados) + as exceções
+    function acessoCoerente(d, antesMp) {
+      let conv = d.get('gruposConvidados', []);
+      let mp = d.get('membrosPorGrupo', null);
+      let dono = d.get('grupoId', '');
+      let exc = d.get('excecoes', {});
+      let grupos = dono == '' ? conv : conv.concat([dono]);
+      return conv is list && mp is map && conv.size() <= 4
+        && conv.toSet().size() == conv.size()
+        && !(dono in conv)
+        && mp.keys().toSet() == grupos.toSet()
+        && fatiaCertaI(mp, antesMp, grupos, 0) && fatiaCertaI(mp, antesMp, grupos, 1) && fatiaCertaI(mp, antesMp, grupos, 2)
+        && fatiaCertaI(mp, antesMp, grupos, 3) && fatiaCertaI(mp, antesMp, grupos, 4)
+        && excecoesValidas(exc)
+        && papeisValidos(d.get('papeis', {}), true)
+        && d.leitores is list
+        // "papeis" (só informativo) não pode crescer além de quem vê o projeto
+        && d.get('papeis', {}).keys().hasOnly(d.leitores)
+        && d.leitores.toSet() == chavesI(mp, grupos, 0).union(chavesI(mp, grupos, 1)).union(chavesI(mp, grupos, 2))
+             .union(chavesI(mp, grupos, 3)).union(chavesI(mp, grupos, 4)).union(exc.keys().toSet());
+    }
     // nível mínimo para EDITAR cada seção do projeto
     function nivelParaEditar(secao) {
       return secao == 'cronograma' ? 3 : secao == 'linhaBase' ? 5 : 4;
@@ -68,60 +116,71 @@ service cloud.firestore {
     // ---------- projetos ----------
     match /projetos/{pid} {
       function cabecalho() { return get(/databases/$(database)/documents/projetos/$(pid)).data; }
-      function meuNivel() { return nivel(papelEm(cabecalho().papeis)); }
-      function podeVer() { return cadastrado() && (ehAdmin() || meuEmail() in cabecalho().leitores); }
-      // campos de acesso: só a administração mexe
-      function campos_de_acesso() { return ['papeis','leitores','excecoes','grupoId','criadoEm','criadoPor']; }
+      function meuNivel() { return nivelProjeto(cabecalho()); }
+      function podeVer() { return (ehAdmin() || (usuarioAtivo() && (meuEmail() in cabecalho().leitores))); }
+      // campos de acesso: só a administração (e, com regras próprias, o grupo dono) mexe
+      function campos_de_acesso() { return ['papeis','leitores','excecoes','grupoId','gruposConvidados','membrosPorGrupo','criadoEm','criadoPor']; }
+      function mudouSo(campos) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(campos); }
 
       // get de um projeto que ainda não existe: a transação de criação lê antes de gravar
-      allow get: if cadastrado() && (ehAdmin() || resource == null || meuEmail() in resource.data.leitores);
-      allow list: if cadastrado() && (ehAdmin() || meuEmail() in resource.data.leitores);
+      allow get: if (ehAdmin() || (usuarioAtivo() && (resource == null || meuEmail() in resource.data.leitores)));
+      allow list: if (ehAdmin() || (usuarioAtivo() && (meuEmail() in resource.data.leitores)));
       // criar: a Administração, ou o Escritório de Projetos (ou acima) do grupo. Quem cria não
-      // escolhe o acesso: o projeto nasce com exatamente as pessoas e papéis do grupo.
+      // escolhe o acesso: o projeto nasce com exatamente as pessoas e papéis do grupo, sem convidados.
       allow create: if cadastrado() && request.resource.data.leitores is list
-        && request.resource.data.leitores.toSet() == request.resource.data.papeis.keys().toSet()
-        && papeisValidos(request.resource.data.papeis, true)
+        && papeisValidos(request.resource.data.get('papeis', {}), true)
         && (ehAdmin()
-            || (nivelNoGrupo(request.resource.data.grupoId) >= 5
+            || (request.resource.data.get('grupoId', '') is string
+                && nivelNoGrupo(request.resource.data.grupoId) >= 5
                 && request.resource.data.criadoPor == meuEmail()
-                && request.resource.data.get('excecoes', {}).size() == 0
-        && request.resource.data.get('grupoId', '') is string
-                && request.resource.data.papeis == grupo(request.resource.data.grupoId).membros));
-      allow update: if cadastrado() && (
-          ehAdmin()
+                && request.resource.data.get('excecoes', {}) == {}
+                && request.resource.data.get('gruposConvidados', []) == []
+                && request.resource.data.membrosPorGrupo is map
+                && request.resource.data.membrosPorGrupo.keys().hasOnly([request.resource.data.grupoId])
+                && request.resource.data.membrosPorGrupo[request.resource.data.grupoId] == grupo(request.resource.data.grupoId).membros
+                && request.resource.data.leitores.toSet() == request.resource.data.membrosPorGrupo[request.resource.data.grupoId].keys().toSet()));
+      function podeAtualizar() {
+        let antes = resource.data;
+        let depois = request.resource.data;
+        let mudou = depois.diff(antes).affectedKeys();
+        return ehAdmin() || (usuarioAtivo()
+          // ninguém grava em nome de outra pessoa ("alterado por")
+          && (!mudou.hasAny(['atualizadoPor']) || depois.atualizadoPor == meuEmail())
+          && (
           // Gestor ou acima: dados do projeto e TAP, sem tocar no acesso
-          || (nivel(papelEm(resource.data.papeis)) >= 4
-              && !request.resource.data.diff(resource.data).affectedKeys().hasAny(campos_de_acesso()))
-          // Administrador do GRUPO do projeto: também o acesso (exceções), sem mudar o grupo.
-          //   Quem tem acesso = exatamente as pessoas do grupo + as exceções.
-          //   (o grupo é lido DEPOIS da gravação: ao salvar o grupo, os projetos vão no mesmo lote)
-          || (nivelNoGrupo(resource.data.grupoId) >= 6
-              && request.resource.data.grupoId == resource.data.grupoId
-              && papeisValidos(request.resource.data.papeis, true)
-              && excecoesValidas(request.resource.data.get('excecoes', {}))
-              && request.resource.data.leitores.toSet() == request.resource.data.papeis.keys().toSet()
-              && request.resource.data.leitores.toSet()
-                   == membrosDepois(request.resource.data.grupoId).toSet().union(request.resource.data.get('excecoes', {}).keys().toSet()))
-        );
-      allow delete: if cadastrado() && (ehAdmin() || nivel(papelEm(resource.data.papeis)) >= 5);
+          (!mudou.hasAny(campos_de_acesso()) && nivelProjeto(antes) >= 4)
+          || (mudou.hasOnly(['excecoes','gruposConvidados','membrosPorGrupo','papeis','leitores','atualizadoPor','atualizadoEm','escritaId'])
+              && (
+                // quem está no projeto pode ATUALIZAR as cópias dos grupos para o que eles são agora
+                // (é assim que a mudança num grupo chega aos projetos; nada além da verdade passa).
+                // Vem antes do teste do grupo dono para não gastar leituras de documento nos lotes.
+                (mudou.hasOnly(['membrosPorGrupo','papeis','leitores','atualizadoPor','atualizadoEm','escritaId'])
+                    && mudou.hasAny(['membrosPorGrupo'])
+                    && meuEmail() in antes.leitores)
+                // Administrador do grupo DONO: exceções e grupos convidados (o dono não muda)
+                || nivelNoGrupo(antes.grupoId) >= 6)
+              && acessoCoerente(depois, antes.get('membrosPorGrupo', null)))));
+      }
+      allow update: if podeAtualizar();
+      allow delete: if (ehAdmin() || (usuarioAtivo() && (nivelProjeto(resource.data) >= 5)));
 
       // seções: cronograma, eap, riscos, custos, stakeholders, responsabilidade, linhaBase
       match /secoes/{secao} {
         allow read: if podeVer() && (secao != 'custos' || ehAdmin() || meuNivel() >= 1);
-        allow write: if cadastrado() && (ehAdmin() || meuNivel() >= nivelParaEditar(secao));
+        allow write: if (ehAdmin() || (usuarioAtivo() && (meuNivel() >= nivelParaEditar(secao))));
       }
       // linhas de base substituídas: só se acrescentam (ninguém reescreve o histórico)
       match /historicoLinhaBase/{hid} {
         allow read: if podeVer();
-        allow create: if cadastrado() && (ehAdmin() || meuNivel() >= 5);
+        allow create: if (ehAdmin() || (usuarioAtivo() && (meuNivel() >= 5)));
         allow update: if false;
-        allow delete: if cadastrado() && (ehAdmin() || meuNivel() >= 5)
+        allow delete: if (ehAdmin() || (usuarioAtivo() && (meuNivel() >= 5)))
           && !existsAfter(/databases/$(database)/documents/projetos/$(pid));   // só ao excluir o projeto
       }
       // travas de edição: cada pessoa só grava a própria; trava vencida (pelo relógio do servidor) pode ser assumida
       match /travas/{secao} {
         allow read: if podeVer();
-        allow create, update: if cadastrado() && (ehAdmin() || meuNivel() >= (secao == 'tudo' ? 5 : nivelParaEditar(secao)))
+        allow create, update: if (ehAdmin() || (usuarioAtivo() && (meuNivel() >= (secao == 'tudo' ? 5 : nivelParaEditar(secao)))))
           && request.resource.data.email == meuEmail()
           && request.resource.data.expiraEm is timestamp
           && request.resource.data.expiraEm <= request.time + duration.value(15, 'm')
@@ -135,11 +194,11 @@ service cloud.firestore {
     // ---------- portfólios ----------
     match /portfolios/{id} {
       allow read: if cadastrado();
-      allow create: if cadastrado() && (ehAdmin() || nivelNoGrupo(request.resource.data.get('grupoId', '')) >= 5);
+      allow create: if (ehAdmin() || (usuarioAtivo() && (nivelNoGrupo(request.resource.data.get('grupoId', '')) >= 5)));
       allow update: if cadastrado() && (ehAdmin()
         || (nivelNoGrupo(resource.data.get('grupoId', '')) >= 5
             && request.resource.data.get('grupoId', '') == resource.data.get('grupoId', '')));
-      allow delete: if cadastrado() && (ehAdmin() || nivelNoGrupo(resource.data.get('grupoId', '')) >= 5);
+      allow delete: if (ehAdmin() || (usuarioAtivo() && (nivelNoGrupo(resource.data.get('grupoId', '')) >= 5)));
     }
 
     // ---------- grupos ----------
@@ -149,7 +208,7 @@ service cloud.firestore {
           && d.membrosEmails.toSet() == d.membros.keys().toSet()
           && papeisValidos(d.membros, false);
       }
-      allow read: if cadastrado() && (ehAdmin() || meuEmail() in resource.data.membrosEmails);
+      allow read: if (ehAdmin() || (usuarioAtivo() && (meuEmail() in resource.data.membrosEmails)));
       allow create: if ehAdmin() && coerente(request.resource.data);
       allow delete: if ehAdmin();
       allow update: if cadastrado() && coerente(request.resource.data) && (
@@ -239,7 +298,7 @@ service cloud.firestore {
         resource.data.solicitante == meuEmail() || ehAdmin()
         || (cadastrado() && meuEmail() in resource.data.destinatarios));
       // responder: uma vez só, em nome próprio
-      allow update: if cadastrado() && (ehAdmin() || meuEmail() in resource.data.destinatarios)
+      allow update: if (ehAdmin() || (usuarioAtivo() && (meuEmail() in resource.data.destinatarios)))
         && resource.data.status == 'aberto'
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','resposta','atendidoPor','atendidoEm'])
         && request.resource.data.status in ['atendido','recusado']

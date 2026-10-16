@@ -365,6 +365,7 @@ table.crono.sched .pill{font-size:10px;padding:3px 7px}
 .empty h3{font-family:var(--font-display);font-size:17px;color:var(--ink);margin-bottom:6px;font-weight:600}
 .empty p{margin-bottom:18px}
 
+.empty-acoes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 /* ---------- Modal ---------- */
 .overlay{position:fixed;inset:0;background:rgba(42,24,64,.42);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
 .overlay.show{display:flex}
@@ -395,6 +396,7 @@ table.crono.sched .pill{font-size:10px;padding:3px 7px}
 
 
 .modal-aviso{background:var(--warn-soft);border:1px solid var(--warn);color:#8a3d06;border-radius:8px;padding:9px 12px;font-size:12.5px;font-weight:600;margin-bottom:12px}
+.modal.modal-adm{max-width:920px}
 /* ---------- Toast ---------- */
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:var(--r);font-weight:500;font-size:13px;opacity:0;transition:.25s;z-index:80;display:flex;align-items:center;gap:9px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -686,6 +688,53 @@ input.ro-espelho{background:var(--workspace);color:var(--muted);cursor:not-allow
 .tap-barra.editando{background:#F1EAF8;border:1px solid #D9C7EE;color:#4A1F70;border-radius:8px;padding:9px 13px;font-size:13px}
 .tap-acoes{display:flex;gap:8px;margin-top:14px;position:sticky;bottom:0;background:linear-gradient(transparent,var(--workspace) 35%);padding:12px 0 6px}
 body.readonly #tap_edit{display:none!important}
+/* TAP como documento em seções (leitura) e formulário em duas colunas (edição) */
+.tap-doc,.tap-form,.tap-barra.editando,.tap-acoes{max-width:1040px}
+.tap-doc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px 30px 10px;box-shadow:0 1px 2px rgba(42,24,64,.04)}
+.tap-doc-cab{border-bottom:2px solid var(--primary);padding-bottom:14px;margin-bottom:6px}
+.tap-doc-tipo{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary)}
+.tap-doc-nome{font-family:var(--font-display);font-size:23px;font-weight:600;letter-spacing:-.3px;color:var(--ink);margin:4px 0 10px;line-height:1.25}
+.tap-doc-prog{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.tap-doc-prog .barwrap{flex:0 0 160px}
+.tap-doc-prog .barwrap i{background:var(--primary)}
+.tap-doc-aviso{margin:12px 0 0;font-size:13px;color:var(--ink-soft);background:var(--primary-soft);border-radius:8px;padding:9px 12px}
+.tap-sec{padding:18px 0 8px;border-top:1px solid var(--line)}
+.tap-doc-cab+.tap-sec{border-top:0}
+.tap-sec-tit{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:15.5px;font-weight:600;color:var(--ink);margin:0 0 12px}
+.tap-sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--primary-soft);color:var(--primary);font-size:12.5px;font-weight:700;flex:0 0 auto}
+.tap-campos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 32px;margin:0 0 8px}
+.tap-campo{min-width:0}
+.tap-campo.largo{grid-column:1/-1}
+.tap-campos dt.tap-row-label{font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:3px}
+.tap-campos dd{margin:0;font-size:14px;color:var(--ink);line-height:1.55}
+.tap-texto{white-space:pre-wrap;overflow-wrap:anywhere}
+.tap-texto a{color:var(--primary)}
+.tap-vazio{color:var(--muted);font-style:italic;font-size:13px}
+.tap-chips{display:flex;flex-wrap:wrap;gap:6px}
+.tap-chip{background:var(--workspace);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12.5px}
+.tap-persp{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--cor);margin-right:7px;vertical-align:0}
+/* edição */
+.tap-form .tap-sec{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px 18px;margin-bottom:14px}
+.tap-form-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 22px}
+.tap-form .tap-row-label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:5px}
+.tap-form input:not([type="checkbox"]),.tap-form select,.tap-form textarea{width:100%;padding:8px 10px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface);font:inherit;font-size:13.5px;color:var(--ink)}
+.tap-form input:not([type="checkbox"]):focus,.tap-form select:focus,.tap-form textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.tap-form textarea{resize:vertical;min-height:40px}
+.tap-form input:disabled{background:var(--workspace);color:var(--ink-soft)}
+.tap-form .hint{margin-top:4px}
+.tap-opcoes{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px}
+.tap-opcoes .port-chk{padding:3px 0}
+@media(max-width:760px){
+  .tap-doc{padding:18px 16px 6px;border-radius:10px}
+  .tap-doc-nome{font-size:19px}
+  .tap-campos,.tap-form-grade{grid-template-columns:1fr}
+  .tap-doc-prog .barwrap{flex:1 1 100px}
+}
+@media print{
+  .tap-doc{border:0;box-shadow:none;padding:0;max-width:none}
+  .tap-sec{break-inside:avoid}
+  .tap-campo{break-inside:avoid}
+}
 /* ---------- Acessibilidade: foco visível (WCAG 2.4.7) ---------- */
 :where(a,button,input,select,textarea,[tabindex],.navbtn,.ptab,.vtbtn,.iconbtn,.caret,.draghandle,.label,.eapv-node,.proj-card,.rm-cell):focus-visible{
   outline:3px solid var(--primary);
@@ -948,16 +997,6 @@ body.readonly #tap_edit{display:none!important}
 .resp-task-name{flex:1;font-size:13px;min-width:0}
 
 /* ---------- TAP (Termo de Abertura do Projeto) ---------- */
-.tap-table{display:flex;flex-direction:column;max-width:1000px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.tap-row{display:grid;grid-template-columns:280px 1fr;border-top:1px solid var(--line);align-items:center}
-.tap-row:first-child{border-top:none}
-.tap-row-label{padding:10px 14px;font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--workspace);align-self:stretch;display:flex;align-items:center}
-.tap-row-value{padding:8px 12px;min-width:0}
-.tap-row-value input:not([type="checkbox"]),.tap-row-value select,.tap-row-value textarea{width:100%}
-.tap-row-value textarea{resize:vertical;min-height:38px}
-.tap-row-value .port-chk-list{border:none;padding:0;max-height:none;gap:6px}
-.tap-row-value .port-chk{padding:2px}
-@media(max-width:760px){.tap-row{grid-template-columns:1fr}.tap-row-label{border-bottom:1px solid var(--line)}}
 
 /* ---------- Links do projeto ---------- */
 .proj-link-list{display:flex;flex-direction:column;gap:2px;max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:4px 10px}
@@ -1115,6 +1154,7 @@ body.is-mobile .filters select{flex:0 0 auto;min-width:150px}
 
 body.is-mobile .tbl-wrap th,body.is-mobile .tbl-wrap td{padding:8px 9px}
 body.is-mobile .tbl-wrap .mono{font-size:11.5px;white-space:nowrap}
+body.is-mobile .tap-barra .hint{display:none}
 /* ---------- Tela de acesso (login, confirmação, pedido de acesso) ---------- */
 body.sem-acesso .app,body.sem-acesso .mbar,body.sem-acesso .msheet,body.sem-acesso .msheet-bg{display:none!important}
 .tela-acesso{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:var(--workspace)}
@@ -1136,6 +1176,26 @@ body.sem-acesso .app,body.sem-acesso .mbar,body.sem-acesso .msheet,body.sem-aces
 .acesso-msg{font-size:12.5px;margin-top:12px;line-height:1.45;min-height:1em}
 .acesso-msg.erro{color:var(--danger);font-weight:600}
 .acesso-msg.ok{color:#0a6b4f;background:var(--exec-soft);border:1px solid var(--exec);border-radius:8px;padding:9px 12px}
+/* acesso de um projeto: grupo dono, convidados, exceções */
+.acesso-sub{font-size:13.5px;margin:14px 0 4px;color:var(--ink)}
+.acesso-pilulas{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 8px}
+.acesso-conv{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0}
+.acesso-conv-topo{display:flex;justify-content:space-between;align-items:center;gap:8px}
+/* Administração › Pessoas: grupos de cada pessoa */
+.pg-lista{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.pg-pilula{display:inline-flex;align-items:center;gap:4px;background:var(--workspace);border:1px solid var(--line);border-radius:999px;padding:2px 4px 2px 10px;max-width:100%}
+.pg-nome{font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.pg-pilula select{font-size:11.5px;padding:2px 4px;border-radius:6px;border:1px solid var(--line);background:var(--surface);max-width:190px}
+.pg-tirar{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 5px;border-radius:50%}
+.pg-tirar:hover{color:var(--danger);background:var(--surface)}
+.pg-incluir{display:inline-block}
+.pg-incluir[open]{display:block;flex-basis:100%}
+.pg-incluir summary{display:inline-block;cursor:pointer;color:var(--primary);font-weight:600;font-size:12px;list-style:none;padding:3px 8px;border:1px dashed var(--line-strong);border-radius:999px}
+.pg-incluir summary::-webkit-details-marker{display:none}
+.pg-incluir[open] summary{margin-bottom:6px}
+.pg-incluir-corpo{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.pg-incluir-corpo{background:var(--workspace);border:1px solid var(--line);border-radius:8px;padding:8px}
+.pg-incluir-corpo select{font-size:12px;padding:5px 6px;border-radius:6px;border:1px solid var(--line-strong);background:var(--surface);max-width:200px}
 /* Administração › Configurações */
 .cfg-titulo{font-size:14px;margin:18px 0 4px;color:var(--ink)}
 .cfg-acoes-topo{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
@@ -1227,13 +1287,13 @@ body.sem-acesso .app,body.sem-acesso .mbar,body.sem-acesso .msheet,body.sem-aces
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Importar projeto
     </button>
-    <button class="navbtn" id="adminBtn" title="Administração" style="display:none">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-      Administração
-    </button>
     <button class="navbtn" id="backupsBtn" title="Exportar e importar (.json)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l5-5 5 5"/><path d="M12 5v11"/><path d="M5 19h14"/></svg>
       Exportar / importar
+    </button>
+    <button class="navbtn" id="adminBtn" title="Administração" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      Administração
     </button>
     <button class="navbtn" id="namesBtn" title="Gerenciar nomes (perfil master)" style="display:none">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -1336,9 +1396,9 @@ const FS_SECOES=["cronograma","eap","riscos","custos","stakeholders","responsabi
 const FS_SECOES_TRAVA=["cabecalho","cronograma","eap","riscos","custos","stakeholders","responsabilidade","linhaBase"];
 const FS_TRAVA_TTL_MS=180000;
 // campos do cabeçalho que só a administração de acesso grava (nunca vêm do formulário do projeto)
-const FS_CAMPOS_ACESSO=["papeis","leitores","excecoes","grupoId","criadoEm","criadoPor"];
+const FS_CAMPOS_ACESSO=["papeis","leitores","excecoes","grupoId","gruposConvidados","membrosPorGrupo","criadoEm","criadoPor"];
 // campos internos do documento que não fazem parte do objeto "projeto" do app
-const FS_CAMPOS_INTERNOS=["tap","papeis","leitores","excecoes","criadoEm","criadoPor","atualizadoEm","atualizadoPor","escritaId"];
+const FS_CAMPOS_INTERNOS=["tap","papeis","leitores","excecoes","gruposConvidados","membrosPorGrupo","criadoEm","criadoPor","atualizadoEm","atualizadoPor","escritaId"];
 // lista do app -> seção do Firestore (e nome da lista dentro do documento)
 const FS_ENTIDADES={
   tasks:{secao:"cronograma",campo:"itens"},
@@ -1566,7 +1626,7 @@ function criarBackendFirestore(firebase, cfgFb, opcoes){
     est.headers.forEach((h,pid)=>{
       d.projects.push(projetoDoHeader(h));
       if(h.tap) d.tapData.push(Object.assign({}, h.tap, {projectId:pid, id:h.tap.id||("tap-"+pid)}));
-      d.acessoProjetos[pid]={grupoId:h.grupoId||"", papeis:h.papeis||{}, excecoes:h.excecoes||{}};
+      d.acessoProjetos[pid]=acessoDoCabecalho(h);
       const sec=est.secoes.get(pid)||{};
       d.secoesCarregadas[pid]=secoesCarregadas(pid);
       d.secoesNegadas[pid]=FS_SECOES.filter(x=>sec[x]===null);
@@ -1597,20 +1657,24 @@ function criarBackendFirestore(firebase, cfgFb, opcoes){
   }
   function papelNoProjeto(pid){
     if(est.adminSistema) return "admin_sistema";
-    const h=est.headers.get(pid); return (h && h.papeis && h.papeis[est.email]) || "";
+    return papelEfetivo(est.headers.get(pid), est.email);
+  }
+  // os campos de acesso de um projeto, como o app usa (papéis efetivos já calculados)
+  function acessoDoCabecalho(h){
+    const a={grupoId:h.grupoId||"", gruposConvidados:(h.gruposConvidados||[]).slice(), membrosPorGrupo:h.membrosPorGrupo||null, excecoes:h.excecoes||{}, papeis:h.papeis||{}};
+    if(a.membrosPorGrupo){ const p={}; (h.leitores||[]).forEach(e=>{ const x=papelEfetivo(a,e); if(x) p[e]=x; }); a.papeis=p; }
+    return a;
   }
   function papelNoGrupo(gid){
     const g=est.grupos.get(gid); return (g && g.membros && g.membros[est.email]) || "";
   }
-  function calcularPapeis(grupoId, excecoes){
-    const g=est.grupos.get(grupoId);
-    const papeis=Object.assign({}, (g&&g.membros)||{});
-    Object.keys(excecoes||{}).forEach(em=>{
-      const atual=papeis[em], novo=excecoes[em];
-      papeis[em] = (typeof papelMaior==="function") ? papelMaior(atual,novo) : (atual||novo);
-    });
-    return papeis;
+  // membros de um grupo: o que este navegador lê do grupo; senão, a cópia que o projeto já tem
+  function membrosAtuais(gid,h){
+    const g=est.grupos.get(gid);
+    if(g && g.membros) return g.membros;
+    return (h && h.membrosPorGrupo && h.membrosPorGrupo[gid]) || {};
   }
+  function calcularPapeis(grupoId, excecoes){ return montarAcesso(grupoId,[],g=>membrosAtuais(g,null),excecoes||{}).papeis; }
   const LIMITE_DOC=900000; // o Firestore aceita até ~1 MiB por documento
   function erroPermanente(e){
     const c=String((e&&e.code)||"");
@@ -1712,8 +1776,8 @@ function criarBackendFirestore(firebase, cfgFb, opcoes){
           }
           if(!novos.has(String(p.id))){ removidosRemotamente.add(String(p.id)); return; }
           const grupoId=p.grupoId || (typeof grupoPadraoParaNovoProjeto==="function" ? grupoPadraoParaNovoProjeto() : "") || "";
-          const papeis=calcularPapeis(grupoId,{});
-          criado=Object.assign({},campos,{ grupoId, excecoes:{}, papeis, leitores:Object.keys(papeis).sort(), criadoPor:est.email });
+          const a=montarAcesso(grupoId,[],g=>membrosAtuais(g,null),{});
+          criado=Object.assign({},campos,{ grupoId, gruposConvidados:[], membrosPorGrupo:a.membrosPorGrupo, excecoes:{}, papeis:a.papeis, leitores:a.leitores, criadoPor:est.email });
           tx.set(ref,Object.assign({},criado,{criadoEm:FV.serverTimestamp(), atualizadoEm:FV.serverTimestamp()}));
         });
         if(criado) est.headers.set(p.id,Object.assign({id:p.id},criado));
@@ -1797,8 +1861,9 @@ function criarBackendFirestore(firebase, cfgFb, opcoes){
     // 6) projetos excluídos: seções, histórico, travas e cabeçalho
     for(const pid of projetosApagados){
       await tentar("excluir projeto",async()=>{
-        let hist=[];
-        try{ const qs=await db.collection("projetos/"+pid+"/historicoLinhaBase").get(); hist=qs.docs.map(d=>d.id); }catch(e){}
+        // sem a lista do histórico não exclui (sobrariam documentos órfãos sob o mesmo id)
+        const qs=await db.collection("projetos/"+pid+"/historicoLinhaBase").get();
+        const hist=qs.docs.map(d=>d.id);
         const b=db.batch();
         FS_SECOES.forEach(s=>b.delete(db.doc("projetos/"+pid+"/secoes/"+s)));
         hist.forEach(h=>b.delete(db.doc("projetos/"+pid+"/historicoLinhaBase/"+h)));
@@ -1827,7 +1892,7 @@ function criarBackendFirestore(firebase, cfgFb, opcoes){
     // updatedAt nulo: o app NÃO avança o marcador de novidades de outras pessoas ao salvar
     // projetos criados agora: o app precisa saber o acesso deles já (senão abririam só para leitura até recarregar)
     const acessoNovos={};
-    novos.forEach(pid=>{ const h=est.headers.get(pid); if(h) acessoNovos[pid]={grupoId:h.grupoId||"", papeis:h.papeis||{}, excecoes:h.excecoes||{}}; });
+    novos.forEach(pid=>{ const h=est.headers.get(pid); if(h) acessoNovos[pid]=acessoDoCabecalho(h); });
     return JSON.stringify({version:est.versao, updatedAt:null, recusados, falhas, acessoNovos});
   }
 
@@ -1988,7 +2053,7 @@ function criarBackendFirestore(firebase, cfgFb, opcoes){
     },
     // usados pelos módulos de login, permissões e administração (etapas seguintes)
     firebase, app, auth, db, estado:est, authPronto, operacoes, extensoes:{},
-    util:{ novoId, emailNorm, msDe, nomeDoEmail, calcularPapeis, papelNoProjeto, papelNoGrupo, montarDados, garantirSecoes, carregarIdentidade, cadastrado, quemSou, iniciarInscricoes }
+    util:{ novoId, emailNorm, msDe, nomeDoEmail, calcularPapeis, membrosAtuais, acessoDoCabecalho, papelNoProjeto, papelNoGrupo, montarDados, garantirSecoes, carregarIdentidade, cadastrado, quemSou, iniciarInscricoes }
   };
   return backend;
 }
@@ -2489,6 +2554,55 @@ function nomesAceitosTAP(id){
   const base=[rotuloTAP(id), c.rotulo, ...(c.antigos||[])];
   const sufixo = c.multiplo==="ano" ? " (separe por ; se for mais de um ano)" : c.multiplo==="item" ? " (separe por ; se for mais de um)" : "";
   return Array.from(new Set(sufixo ? base.flatMap(n=>[n+sufixo,n]) : base));
+}
+/* ============================================================
+   ACESSO A UM PROJETO (cálculo puro, o mesmo das regras do Firestore)
+
+   Um projeto tem um grupo DONO (grupoId) e até 4 grupos CONVIDADOS
+   (gruposConvidados). O cabeçalho guarda uma cópia dos membros de cada
+   um (membrosPorGrupo: grupo -> {e-mail: papel}) e as exceções do
+   projeto (excecoes: {e-mail: papel}).
+
+   Papel de alguém no projeto = o MAIOR entre:
+   - o papel no grupo dono;
+   - o papel num grupo convidado, valendo no máximo Gestor (quem
+     administra o projeto é sempre o grupo dono);
+   - a exceção do projeto.
+
+   "papeis" (efetivo) e "leitores" (quem vê) são derivados daqui.
+   Projetos antigos, sem membrosPorGrupo, usam o "papeis" gravado.
+============================================================ */
+const LIMITE_GRUPOS_CONVIDADOS=4;
+const NIVEL_TETO_GRUPO_CONVIDADO=4; // Gestor
+const _NIVEL_ACESSO={admin_grupo:6,escritorio:5,gestor:4,equipe:3,patrocinador:2,leitura:1,convidado:0};
+const _PAPEL_DO_NIVEL=["convidado","leitura","patrocinador","equipe","gestor","escritorio","admin_grupo"];
+const _nivelAcesso=p=>Object.prototype.hasOwnProperty.call(_NIVEL_ACESSO,p)?_NIVEL_ACESSO[p]:-1;
+
+function papelEfetivo(acesso,email){
+  if(!acesso) return "";
+  email=String(email||"").toLowerCase();
+  const mp=acesso.membrosPorGrupo;
+  if(!mp || typeof mp!=="object") return ((acesso.papeis||{})[email])||"";
+  let n=-1;
+  const dono=acesso.grupoId && mp[acesso.grupoId] ? mp[acesso.grupoId][email] : "";
+  if(dono) n=Math.max(n,_nivelAcesso(dono));
+  (acesso.gruposConvidados||[]).forEach(g=>{ const p=mp[g]&&mp[g][email]; if(p) n=Math.max(n,Math.min(_nivelAcesso(p),NIVEL_TETO_GRUPO_CONVIDADO)); });
+  const e=(acesso.excecoes||{})[email]; if(e) n=Math.max(n,_nivelAcesso(e));
+  return n<0 ? "" : _PAPEL_DO_NIVEL[n];
+}
+/* monta os campos de acesso do cabeçalho. membrosDe(gid) devolve os membros atuais do grupo */
+function montarAcesso(grupoId,gruposConvidados,membrosDe,excecoes){
+  const conv=Array.from(new Set((gruposConvidados||[]).filter(g=>g && g!==grupoId))).slice(0,LIMITE_GRUPOS_CONVIDADOS);
+  const mp={};
+  if(grupoId) mp[grupoId]=Object.assign({},membrosDe(grupoId)||{});
+  conv.forEach(g=>{ mp[g]=Object.assign({},membrosDe(g)||{}); });
+  const acesso={grupoId:grupoId||"", gruposConvidados:conv, membrosPorGrupo:mp, excecoes:Object.assign({},excecoes||{})};
+  const emails=new Set();
+  Object.keys(mp).forEach(g=>Object.keys(mp[g]).forEach(e=>emails.add(e)));
+  Object.keys(acesso.excecoes).forEach(e=>emails.add(e));
+  const papeis={}; emails.forEach(e=>{ const p=papelEfetivo(acesso,e); if(p) papeis[e]=p; });
+  acesso.papeis=papeis; acesso.leitores=Array.from(emails).sort();
+  return acesso;
 }
 /* ============================================================
    HELPERS
@@ -3480,7 +3594,7 @@ function filterBar(comToggleProgresso){
   const projOpts=DATA.projects.map(p=>`<option value="${p.id}" ${filters.project===p.id?"selected":""}>${esc(p.name)}</option>`).join("");
   const pplOpts=DATA.people.map(p=>`<option value="${esc(p)}" ${filters.assignee===p?"selected":""}>${esc(p)}</option>`).join("");
   const stOpts=STATUS.map(s=>`<option value="${s.id}" ${filters.status===s.id?"selected":""}>${s.label}</option>`).join("");
-  const n=activeFilterCount();
+  const n=activeFilterCount()-(view==="project"&&filters.project?1:0); // dentro do projeto, o projeto não é "filtro"
   return `<div class="filters">
     ${showProjSel?`<select id="fProject"><option value="">Todos os projetos</option>${projOpts}</select>`:""}
     <select id="fAssignee"><option value="">Todos responsáveis</option>${pplOpts}</select>
@@ -3622,7 +3736,7 @@ function renderDashboard(){
 function renderProjectDetail(){
   const p=projOf(currentProjectId);
   if(!p){
-    return emptyState("Projeto não encontrado","Volte para a tela de Projetos e escolha outro.");
+    return emptyState("Projeto não encontrado","Volte para a tela de Projetos e escolha outro.",botaoVazio("voltar"));
   }
   const locked=isLockedByOther(p.id);
   const all=DATA.tasks.filter(t=>t.projectId===p.id);
@@ -3716,7 +3830,7 @@ function iconStakeholders(){return `<svg viewBox="0 0 24 24" width="15" height="
 function eapOrdenar(lista){ return lista.filter(e=>!e.isMilestone).concat(lista.filter(e=>e.isMilestone)); }
 
 function renderEAP(projectId){
-  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","");
+  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","",botaoVazio("voltar"));
   const roots=eapChildrenOf(projectId,null);
   if(!roots.length) return `<div class="eap-toolbar no-print"><button class="btn primary sm" id="eapEditBtn">Editar EAP em lote</button><button class="btn sm" id="eapAutoBtn">Montar EAP automática</button></div>`+emptyState("EAP vazia","Use \"Editar EAP em lote\" acima para criar a estrutura manualmente, ou \"Montar EAP automática\" para gerar a partir das atividades do Cronograma que têm subordinadas.");
 
@@ -3977,7 +4091,7 @@ function renderProjectsHub(){
       </div>
     </div>`;
   }).join("");
-  if(!cards) return (DATA.portfolios.length?portfolioFilterBar():"")+emptyState("Nenhum projeto encontrado","Crie um projeto para começar.");
+  if(!cards) return (DATA.portfolios.length?portfolioFilterBar():"")+(DATA.projects.length?emptyState("Nenhum projeto encontrado","Nenhum projeto corresponde à busca ou ao portfólio escolhido.",botaoVazio("filtros")):emptyState("Nenhum projeto ainda",podeCriarProjeto()?"Crie um projeto para começar.":"Quando você for incluído em um projeto, ele aparece aqui."));
   return portfolioFilterBar()+`<div class="proj-cards-grid">${cards}</div><p class="hint no-print" style="margin-top:12px">Clique em um card para abrir o projeto: EAP, Cronograma, Gantt, Riscos e Custos.</p>`;
 }
 function portfolioFilterBar(){
@@ -4080,7 +4194,13 @@ function renderCronoTree(){
     if(expanded["p_"+p.id]!==false) roots.forEach(r=>renderTask(r,0));
   });
 
-  if(!rows) return filterBar(true)+emptyState("Nenhum resultado","Ajuste os filtros ou crie um projeto para começar.");
+  if(!rows){
+    const pidVazio = view==="project" ? currentProjectId : "";
+    const temAtiv = pidVazio ? DATA.tasks.some(t=>t.projectId===pidVazio) : DATA.tasks.length>0;
+    if(pidVazio && !temAtiv) return filterBar(true)+vazioSemAtividades(pidVazio);
+    if(!DATA.projects.length) return filterBar(true)+emptyState("Nenhum projeto ainda","Crie um projeto para começar.");
+    return filterBar(true)+emptyState("Nenhum resultado","Nenhuma atividade corresponde aos filtros escolhidos.",botaoVazio("filtros"));
+  }
 
   const colsLargos = showProgressBar
     ? `<col style="width:40%"><col style="width:5%"><col style="width:11%"><col style="width:7%">
@@ -4184,7 +4304,14 @@ function renderGantt(){
   const timeW = Math.max(totalCols*COLW, totalDays*DW);
   const xOf=iso=>{ if(!iso)return 0; return Math.round((parseD(iso)-min)/86400000)*DW; };
 
-  if(!flat.length) return filterBar()+ganttToolbar(escala,totalDays)+emptyState("Nada para exibir","Crie atividades com datas planejadas para ver o Gantt.");
+  if(!flat.length){
+    const pidVazio = view==="project" ? currentProjectId : filters.project;
+    const temAtiv = pidVazio ? DATA.tasks.some(t=>t.projectId===pidVazio) : DATA.tasks.length>0;
+    const vazio = pidVazio && !temAtiv
+      ? vazioSemAtividades(pidVazio,"Nada para exibir no Gantt","Crie atividades com datas planejadas para ver o Gantt.")
+      : emptyState("Nada para exibir", temAtiv?"Nenhuma atividade com datas planejadas corresponde aos filtros. Informe início e fim planejados para ver as barras.":"Crie atividades com datas planejadas para ver o Gantt.", activeFilterCount()>(view==="project"?1:0)||filters.search?botaoVazio("filtros"):(pidVazio?botaoVazio("atividade",pidVazio):""));
+    return filterBar()+ganttToolbar(escala,totalDays)+vazio;
+  }
 
   // crit sets
   const critSets={};
@@ -4335,15 +4462,55 @@ function ganttToolbar(escala,totalDays){
 
 /* ============================================================
    EMPTY
+   emptyState(título, texto, ação)
+   - ação omitida: "Criar projeto" (só para quem pode criar);
+   - ação "" ou null: sem botão;
+   - ação texto: o HTML do(s) botão(ões) — use os ajudantes abaixo.
+   Os botões chamam a ação por data-vazio (sem JavaScript no HTML).
 ============================================================ */
-function emptyState(title,msg){
+function emptyState(title,msg,acao){
+  const botao = acao===undefined ? botaoVazio("projeto") : (acao||"");
   return `<div class="empty">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-    <h3>${esc(title)}</h3><p>${esc(msg)}</p>
-    <button class="btn primary" onclick="openProjectModal()">Criar projeto</button>
+    <h3>${esc(title)}</h3>${msg?`<p>${esc(msg)}</p>`:""}
+    ${botao?`<div class="empty-acoes no-print">${botao}</div>`:""}
   </div>`;
 }
-
+/* botão de uma ação da tela vazia; devolve "" quando a pessoa não pode fazê-la */
+function botaoVazio(tipo,pid){
+  // celular é versão de consulta; somente leitura não cria nada
+  const soLeitura=!!readOnly || (typeof isMobile!=="undefined" && isMobile);
+  const b=(rotulo,primario,extra)=>`<button class="btn${primario?" primary":""}" data-vazio="${tipo}"${extra||""}>${esc(rotulo)}</button>`;
+  switch(tipo){
+    case "projeto":   return (typeof podeCriarProjeto!=="function"||podeCriarProjeto()) && !soLeitura ? b("+ Criar projeto",true) : "";
+    case "atividade": return pid && pode("editar",pid,"cronograma") && !soLeitura ? b("+ Nova atividade",true,` data-vazio-pid="${esc(pid)}"`) : "";
+    case "portfolio": return (typeof podeEditarPortfolio!=="function"||podeEditarPortfolio(null)) && !soLeitura ? b("+ Novo portfólio",true) : "";
+    case "filtros":   return b("Limpar filtros",false);
+    case "voltar":    return b("Voltar para Projetos",false);
+    default: return "";
+  }
+}
+/* tela vazia de um projeto sem atividades: oferece criar a primeira */
+function vazioSemAtividades(pid,titulo,msg){
+  const btn=botaoVazio("atividade",pid);
+  return emptyState(titulo||"Este projeto ainda não tem atividades",
+    msg || (btn?"Comece pela primeira atividade do Cronograma.":"Quando a equipe cadastrar atividades, elas aparecem aqui."), btn);
+}
+document.addEventListener("click",e=>{
+  const el=e.target && e.target.closest ? e.target.closest("[data-vazio]") : null;
+  if(!el) return;
+  switch(el.dataset.vazio){
+    case "projeto":   openProjectModal(); break;
+    case "atividade": { const pid=el.dataset.vazioPid; lastProject=pid; openTaskModal(null,{projectId:pid,parentId:null}); break; }
+    case "portfolio": openPortfolioModal(); break;
+    case "filtros":   // dentro de um projeto o projeto continua fixo
+      filters.assignee="";filters.status="";filters.late=false;filters.milestone=false;filters.search="";
+      if(view!=="project") filters.project="";
+      { const s=document.getElementById("search"); if(s) s.value=""; }
+      render(); break;
+    case "voltar":    view="projects"; render(); break;
+  }
+});
 /* ============================================================
    WIRE EVENTS (per render)
 ============================================================ */
@@ -4356,9 +4523,14 @@ function wireView(){
   if(fl) fl.onclick=()=>{filters.late=!filters.late;render();};
   if(fm) fm.onclick=()=>{filters.milestone=!filters.milestone;render();};
   if(fpg) fpg.onclick=()=>toggleProgressBar();
-  if(fc) fc.onclick=()=>{filters.project="";filters.assignee="";filters.status="";filters.late=false;filters.milestone=false;render();};
+  if(fc) fc.onclick=()=>{if(view!=="project") filters.project="";filters.assignee="";filters.status="";filters.late=false;filters.milestone=false;render();};
   const fcount=$("#fCount");
-  if(fcount){ const n=DATA.tasks.filter(passFilters).length; fcount.textContent=n+" atividade"+(n===1?"":"s"); }
+  if(fcount){
+    // dentro de um projeto, conta só as atividades dele
+    const salvo=filters.project; if(view==="project" && currentProjectId) filters.project=currentProjectId;
+    const n=DATA.tasks.filter(passFilters).length; filters.project=salvo;
+    fcount.textContent=n+" atividade"+(n===1?"":"s");
+  }
 
   // crono toggles & actions
   $$("[data-toggle]").forEach(el=>el.onclick=e=>{e.stopPropagation();const id=el.dataset.toggle;expanded[id]=expanded[id]===false;render();});
@@ -6989,7 +7161,7 @@ function openBaselineHistoryModal(projectId){
           <div class="bl-history-just"><strong>Motivo da redefinição:</strong> ${esc(h.justificativaRedefinicao||"—")}</div>
           <div class="hint" style="display:inline">${(h.tasks||[]).length} atividade(s) na fotografia</div>
         </div>`).join("")}</div>`
-    : emptyState("Nenhuma redefinição ainda","O histórico aparece aqui a partir da primeira vez que a linha de base for redefinida.");
+    : emptyState("Nenhuma redefinição ainda","O histórico aparece aqui a partir da primeira vez que a linha de base for redefinida.","");
   showModal(`Histórico de linhas de base — ${esc(p.name)}`,body,`<button class="btn" id="blh_close">Fechar</button>`,true);
   $("#blh_close").onclick=closeModal;
 }
@@ -7034,7 +7206,7 @@ function treeOrderTasks(projectId){
 }
 
 function renderBaseline(projectId){
-  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","");
+  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","",botaoVazio("voltar"));
   const baseline=baselineOf(projectId);
   const ordenadas=treeOrderTasks(projectId);
   const todas=ordenadas.map(o=>o.task);
@@ -7053,10 +7225,10 @@ function renderBaseline(projectId){
   </div>`;
 
   if(!baseline){
-    return header+emptyState("Nenhuma comparação disponível","Defina a linha de base acima para começar a acompanhar o desvio do cronograma.");
+    return header+emptyState("Nenhuma comparação disponível","Defina a linha de base acima para começar a acompanhar o desvio do cronograma.","");
   }
   if(!todas.length){
-    return header+emptyState("Este projeto não tem atividades","");
+    return header+vazioSemAtividades(projectId);
   }
 
   const modo = baselineCompareMode==="exec" ? "exec" : "plan";
@@ -7357,7 +7529,7 @@ function stakeholderQuadrant(power,interest){
 }
 
 function renderStakeholders(projectId){
-  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","");
+  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","",botaoVazio("voltar"));
   const lista=DATA.stakeholders.filter(s=>s.projectId===projectId);
 
   // pontos do grafico de dispersao: posicionados por interesse (x) e poder (y, invertido pois y cresce pra baixo na tela)
@@ -7441,7 +7613,7 @@ function renderStakeholders(projectId){
       <button class="btn" id="stkDuplicate" style="margin-left:auto">Duplicar para outro projeto</button>
       <button class="btn primary" id="stkGerenciarEnvios">Gerenciador de envios</button>
     </h2>
-    ${lista.length?grade:emptyState("Nenhum stakeholder ainda","Cadastre abaixo para ver a matriz.")}
+    ${lista.length?grade:emptyState("Nenhum stakeholder ainda","Use “+ Novo stakeholder”, logo abaixo, para montar a matriz.","")}
     <div class="legend" style="margin-top:14px">
       <span><i style="background:var(--danger)"></i> Gerenciar com atenção</span>
       <span><i style="background:var(--warn)"></i> Manter satisfeito</span>
@@ -7604,7 +7776,7 @@ function renderPortfolios(){
 
   return `<div class="expand-bar no-print"><button class="btn primary sm" id="newPortBtn">+ Novo portfólio</button></div>
     ${DATA.portfolios.length?`<div class="port-cards-grid">${cards}</div><p class="hint no-print" style="margin-top:12px">Clique em um card para ver os projetos deste portfólio.</p>`
-      :emptyState("Nenhum portfólio ainda","Crie um portfólio para agrupar projetos relacionados — por área, tema ou ano.")}`;
+      :emptyState("Nenhum portfólio ainda","Crie um portfólio para agrupar projetos relacionados — por área, tema ou ano.","")}`;
 }
 
 async function openPortfolioModal(id){
@@ -8761,11 +8933,14 @@ function openHelpModal(){
       ${helpSection("Acesso e papéis",[
         ["Entrar","Tela inicial","Com a conta Google, com um link enviado por e-mail ou com e-mail e senha. Só entra quem foi cadastrado; quem não foi pode pedir acesso ali mesmo."],
         ["Grupos","—","Cada projeto pertence a um grupo. Cada pessoa tem um papel no grupo, que vale para todos os projetos dele: Administrador do grupo, Escritório de Projetos, Gestor, Equipe, Patrocinador ou Somente leitura."],
-        ["Acesso só a um projeto",`Projeto ${seta} Editar projeto ${seta} Acesso`,"O Administrador do grupo pode dar a alguém um papel em um projeto só (inclusive Convidado externo, que não vê os custos). Vale sempre o maior papel."],
+        ["Projeto em mais de um grupo",`Projeto ${seta} Editar projeto ${seta} Acesso`,"O projeto tem um grupo dono e pode receber até 4 grupos convidados. Quem vem por um grupo convidado vale no máximo Gestor; o grupo dono continua administrando o projeto (acesso, exclusão, linha de base). Mudanças nos grupos chegam sozinhas aos projetos."],
+        ["Acesso só a um projeto",`Projeto ${seta} Editar projeto ${seta} Acesso`,"O Administrador do grupo dono pode dar a alguém um papel em um projeto só (inclusive Convidado externo, que não vê os custos). Vale sempre o maior papel."],
         ["O que cada papel faz",`Menu lateral ${seta} Administração ${seta} Grupos e papéis`,"A legenda no fim da tela explica cada papel. O que a tela não oferece, o servidor também recusa."]
       ])}
       ${helpSection("Administração",[
-        ["Pessoas",`Menu lateral ${seta} Administração ${seta} Pessoas`,"Só a Administração do sistema: cadastrar, desativar e dar a Administração a outras pessoas."],
+        ["Pessoas",`Menu lateral ${seta} Administração ${seta} Pessoas`,"Só a Administração do sistema: cadastrar, desativar, dar a Administração a outras pessoas e mexer nos grupos de cada uma (incluir em grupo, trocar o papel, tirar)."],
+        ["Incluir pessoa num grupo",`Administração ${seta} Grupos e papéis ${seta} um grupo`,"Nome, e-mail e papel. Quem ainda não tem cadastro é cadastrado na hora, com o nome informado."],
+        ["Grupo novo ao importar",`Exportar / importar ${seta} Importar`,"A Administração do sistema pode criar, ali mesmo, um grupo para os projetos importados. O grupo nasce vazio; as pessoas entram depois, em Grupos e papéis."],
         ["Pedidos",`Menu lateral ${seta} Administração ${seta} Pedidos`,"Pedidos de acesso, de exclusão de projeto ou portfólio e de linha de base, para quem pode atendê-los. Quem pediu recebe a resposta por e-mail."],
         ["Configurações",`Menu lateral ${seta} Administração ${seta} Configurações`,"Perspectivas estratégicas e objetivos, listas de opções (categorias de custo, fontes de recurso, prazos…) e campos da TAP — renomear ou ocultar. Dá para exportar e importar o modelo em arquivo."]
       ])}
@@ -9195,7 +9370,7 @@ function responsiblesOfProject(projectId){
 }
 
 function renderResponsibilityMatrix(projectId){
-  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","");
+  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","",botaoVazio("voltar"));
   const lista=responsiblesOfProject(projectId);
   const linhas=lista.map(r=>`
     <div class="resp-row">
@@ -9658,7 +9833,7 @@ function verificarSaidaDaTAP(){
 }
 
 function renderTAP(projectId){
-  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","");
+  const p=projOf(projectId); if(!p) return emptyState("Projeto não encontrado","",botaoVazio("voltar"));
   const editando = !!(tapEdicao && tapEdicao.projectId===projectId && !isReadOnly());
   const rasc = editando && tapEdicao.rascunho;
   const t=Object.assign({}, tapOfProject(projectId)||{}, rasc||{});
@@ -9667,7 +9842,6 @@ function renderTAP(projectId){
   const selectHtml=(id,opts,valorAtual,comBranco)=>`<select id="${id}">${comBranco?`<option value="">Selecione…</option>`:""}${(valorAtual&&!opts.includes(valorAtual)?[valorAtual,...opts]:opts).map(o=>`<option value="${esc(o)}" ${valorAtual===o?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
   const checksHtml=(id,opts,selecionados)=>opts.map(o=>`<label class="port-chk tap-year-chk"><input type="checkbox" data-tapcheck="${id}" value="${esc(o)}" ${selecionados.includes(o)?"checked":""}>${esc(o)}</label>`).join("");
   // cada campo: rótulo e visibilidade vêm das Configurações (Administração)
-  const row=(id,valueHtml)=>campoTAPVisivel(id)?`<div class="tap-row" data-tapcampo="${id}"><div class="tap-row-label">${esc(rotuloTAP(id))}</div><div class="tap-row-value">${valueHtml}</div></div>`:"";
   // compatibilidade: TAPs antigos guardavam um ano só (string); agora é lista
   const temporalidadeAtual=Array.isArray(t.temporalidade)?t.temporalidade:(t.temporalidade?[t.temporalidade]:[]);
 
@@ -9695,30 +9869,90 @@ function renderTAP(projectId){
           : `<button class="btn primary" id="tap_edit">Editar TAP</button>`}
         <span class="hint" style="margin:0">A TAP fica só para leitura até você clicar em Editar.</span>
       </div>`;
-  return barra+`<fieldset class="tap-fieldset" ${editando?"":"disabled"}><div class="tap-table">
-    ${row("nome",`<input value="${esc(p.name)}" disabled>`)}
-    ${row("temporalidade",`<div style="display:flex;flex-direction:column;gap:8px"><div class="tap-year-list">${checksHtml("temporalidade",tapYearOptionsAll().concat(temporalidadeAtual.filter(y=>!tapYearOptionsAll().includes(y))),temporalidadeAtual)}</div><button class="btn sm" id="tap_addyear" type="button" title="Adicionar outra opção de ano" style="align-self:flex-start">+ ano</button></div>`)}
-    ${row("novoOuAndamento",`<div style="max-width:280px">${selectHtml("tap_novoandamento",TAP_NOVO_ANDAMENTO,t.novoOuAndamento||"",true)}</div>`)}
-    ${row("etapaAtual",`<textarea id="tap_etapa" rows="2">${esc(t.etapaAtual||"")}</textarea>`)}
-    ${row("subsecretaria",`<input id="tap_subsecretaria" value="${esc(t.subsecretaria||"")}">`)}
-    ${row("areaTecnica",`<input id="tap_areatecnica" value="${esc(t.areaTecnica||"")}">`)}
-    ${row("gestor",`<input value="${esc(p.owner||"")}" disabled>`)}
-    ${row("telefone",`<div style="max-width:220px"><input id="tap_telefone" value="${esc(t.telefone||"")}"></div>`)}
-    ${row("email",`<div style="max-width:320px"><input id="tap_email" type="email" value="${esc(t.email||"")}"></div>`)}
-    ${row("justificativa",`<textarea id="tap_justificativa" rows="3">${esc(t.justificativa||"")}</textarea>`)}
-    ${row("publicoAlvo",`<textarea id="tap_publicoalvo" rows="2">${esc(t.publicoAlvo||"")}</textarea>`)}
-    ${row("objetivo",`<textarea id="tap_objetivo" rows="3">${esc(t.objetivo||"")}</textarea>`)}
-    ${row("escopo",`<textarea id="tap_escopo" rows="4">${esc(t.escopo||"")}</textarea>`)}
-    ${row("resultadosEsperados",`<textarea id="tap_resultados" rows="3">${esc(t.resultadosEsperados||"")}</textarea>`)}
-    ${row("recursosDemandados",`<div class="port-chk-list">${checksHtml("recursos",TAP_RECURSOS_DEMANDADOS.concat((t.recursosDemandados||[]).filter(x=>!TAP_RECURSOS_DEMANDADOS.includes(x))),t.recursosDemandados||[])}</div>`)}
-    ${row("fonteRecursos",`<div style="max-width:420px">${selectHtml("tap_fonte",comValorAtual(FONTES_RECURSO,t.fonteRecursos),t.fonteRecursos||"",true)}</div>`)}
-    ${row("prazoEstimado",`<div style="max-width:280px">${selectHtml("tap_prazo",comValorAtual(TAP_PRAZOS,t.prazoEstimado),t.prazoEstimado||"",true)}</div>`)}
-    ${row("perspectiva",`<div style="max-width:520px"><select id="tap_perspectiva">${perspOptsHtml}</select></div>`)}
-    ${row("objetivoGeral",`<div style="max-width:640px"><select id="tap_objgeral">${`<option value="">Selecione…</option>`+geraisOpts.map(x=>`<option value="${esc(x)}" ${geralAtual===x?"selected":""}>${esc(x)}</option>`).join("")}</select></div>`)}
-    ${row("objetivoEspecifico",`<div style="max-width:640px"><select id="tap_objespecifico">${`<option value="">Selecione…</option>`+especificosOpts.map(x=>`<option value="${esc(x)}" ${especificoAtual===x?"selected":""}>${esc(x)}</option>`).join("")}</select></div>`)}
-    ${row("dataPreenchimento",`<div style="max-width:200px"><input id="tap_data" type="date" value="${t.dataPreenchimento||hoje}"></div>`)}
-  </div></fieldset>
-  ${editando?`<div class="tap-acoes no-print"><button class="btn primary" id="tap_save">Salvar TAP</button><button class="btn" id="tap_cancel">Cancelar</button></div>`:""}`;
+  // ---- seções do documento (a ordem dos campos dentro de cada uma) ----
+  // largo: ocupa as duas colunas do formulário (textos longos, listas de opções)
+  const SECOES=[
+    {id:"identificacao", titulo:"Identificação",            campos:["nome","novoOuAndamento","gestor","dataPreenchimento","subsecretaria","areaTecnica","telefone","email","etapaAtual"]},
+    {id:"escopo",        titulo:"Justificativa e escopo",   campos:["justificativa","publicoAlvo","objetivo","escopo","resultadosEsperados"]},
+    {id:"recursos",      titulo:"Recursos e prazo",         campos:["recursosDemandados","fonteRecursos","prazoEstimado","temporalidade"]},
+    {id:"estrategia",    titulo:"Alinhamento estratégico",  campos:["perspectiva","objetivoGeral","objetivoEspecifico"]}
+  ];
+  const LARGOS=new Set(["etapaAtual","justificativa","publicoAlvo","objetivo","escopo","resultadosEsperados","recursosDemandados","temporalidade","perspectiva","objetivoGeral","objetivoEspecifico"]);
+  const DO_PROJETO=new Set(["nome","gestor"]); // vêm do cadastro do projeto
+
+  if(!editando){
+    // ---------- LEITURA: um documento ----------
+    const vazio=`<span class="tap-vazio">Não informado</span>`;
+    const texto=v=>v&&String(v).trim()?`<div class="tap-texto">${esc(String(v).trim())}</div>`:vazio;
+    const lista=arr=>(arr&&arr.length)?`<div class="tap-chips">${arr.map(x=>`<span class="tap-chip">${esc(x)}</span>`).join("")}</div>`:vazio;
+    const valores={
+      nome:texto(p.name), gestor:texto(p.owner), novoOuAndamento:texto(t.novoOuAndamento),
+      dataPreenchimento:t.dataPreenchimento?`<div class="tap-texto">${esc(fmtBRfull(t.dataPreenchimento))}</div>`:vazio,
+      subsecretaria:texto(t.subsecretaria), areaTecnica:texto(t.areaTecnica), telefone:texto(t.telefone),
+      email:t.email?`<div class="tap-texto"><a href="mailto:${esc(t.email)}">${esc(t.email)}</a></div>`:vazio,
+      etapaAtual:texto(t.etapaAtual), justificativa:texto(t.justificativa), publicoAlvo:texto(t.publicoAlvo),
+      objetivo:texto(t.objetivo), escopo:texto(t.escopo), resultadosEsperados:texto(t.resultadosEsperados),
+      recursosDemandados:lista(t.recursosDemandados||[]), fonteRecursos:texto(t.fonteRecursos), prazoEstimado:texto(t.prazoEstimado),
+      temporalidade:lista(temporalidadeAtual),
+      perspectiva:perspAtual?`<div class="tap-texto"><span class="tap-persp" style="--cor:${esc(corDaPerspectiva(perspAtual))}"></span>${esc(perspAtual)}</div>`:vazio,
+      objetivoGeral:texto(t.objetivoGeral), objetivoEspecifico:texto(t.objetivoEspecifico)
+    };
+    const preenchido=id=>{
+      if(id==="nome") return !!p.name; if(id==="gestor") return !!p.owner; if(id==="perspectiva") return !!perspAtual;
+      if(id==="temporalidade") return temporalidadeAtual.length>0;
+      const v=t[id]; return Array.isArray(v)?v.length>0:!!(v&&String(v).trim());
+    };
+    const visiveis=SECOES.flatMap(sc=>sc.campos).filter(campoTAPVisivel);
+    const nPre=visiveis.filter(preenchido).length, pct=visiveis.length?Math.round(nPre/visiveis.length*100):0;
+    const semTAP=!tapOfProject(projectId);
+    const secoes=SECOES.map((sc,ix)=>{
+      const cs=sc.campos.filter(campoTAPVisivel); if(!cs.length) return "";
+      return `<section class="tap-sec" data-tapsec="${sc.id}"><h3 class="tap-sec-tit"><span class="tap-sec-num">${ix+1}</span>${esc(sc.titulo)}</h3>
+        <dl class="tap-campos">${cs.map(id=>`<div class="tap-campo${LARGOS.has(id)?" largo":""}" data-tapcampo="${id}"><dt class="tap-row-label">${esc(rotuloTAP(id))}</dt><dd>${valores[id]}</dd></div>`).join("")}</dl></section>`;
+    }).join("");
+    return barra+`<article class="tap-doc" aria-label="Termo de Abertura do Projeto">
+      <header class="tap-doc-cab">
+        <div class="tap-doc-tipo">Termo de Abertura do Projeto</div>
+        <h2 class="tap-doc-nome">${esc(p.name)}</h2>
+        <div class="tap-doc-prog" title="${nPre} de ${visiveis.length} campos preenchidos"><span class="barwrap"><i style="width:${pct}%"></i></span><span>${nPre} de ${visiveis.length} campos preenchidos</span></div>
+        ${semTAP?`<p class="tap-doc-aviso no-print">A TAP deste projeto ainda não foi preenchida${travadoPorOutro?"":" — clique em <b>Editar TAP</b> para começar"}.</p>`:""}
+      </header>${secoes}</article>`;
+  }
+
+  // ---------- EDIÇÃO: formulário em duas colunas, nas mesmas seções ----------
+  const controles={
+    nome:`<input value="${esc(p.name)}" disabled>`,
+    gestor:`<input value="${esc(p.owner||"")}" disabled>`,
+    novoOuAndamento:selectHtml("tap_novoandamento",TAP_NOVO_ANDAMENTO,t.novoOuAndamento||"",true),
+    dataPreenchimento:`<input id="tap_data" type="date" value="${t.dataPreenchimento||hoje}">`,
+    subsecretaria:`<input id="tap_subsecretaria" value="${esc(t.subsecretaria||"")}">`,
+    areaTecnica:`<input id="tap_areatecnica" value="${esc(t.areaTecnica||"")}">`,
+    telefone:`<input id="tap_telefone" type="tel" value="${esc(t.telefone||"")}">`,
+    email:`<input id="tap_email" type="email" value="${esc(t.email||"")}">`,
+    etapaAtual:`<textarea id="tap_etapa" rows="2">${esc(t.etapaAtual||"")}</textarea>`,
+    justificativa:`<textarea id="tap_justificativa" rows="4">${esc(t.justificativa||"")}</textarea>`,
+    publicoAlvo:`<textarea id="tap_publicoalvo" rows="2">${esc(t.publicoAlvo||"")}</textarea>`,
+    objetivo:`<textarea id="tap_objetivo" rows="3">${esc(t.objetivo||"")}</textarea>`,
+    escopo:`<textarea id="tap_escopo" rows="4">${esc(t.escopo||"")}</textarea>`,
+    resultadosEsperados:`<textarea id="tap_resultados" rows="3">${esc(t.resultadosEsperados||"")}</textarea>`,
+    recursosDemandados:`<div class="tap-opcoes">${checksHtml("recursos",TAP_RECURSOS_DEMANDADOS.concat((t.recursosDemandados||[]).filter(x=>!TAP_RECURSOS_DEMANDADOS.includes(x))),t.recursosDemandados||[])}</div>`,
+    fonteRecursos:selectHtml("tap_fonte",comValorAtual(FONTES_RECURSO,t.fonteRecursos),t.fonteRecursos||"",true),
+    prazoEstimado:selectHtml("tap_prazo",comValorAtual(TAP_PRAZOS,t.prazoEstimado),t.prazoEstimado||"",true),
+    temporalidade:`<div class="tap-opcoes">${checksHtml("temporalidade",tapYearOptionsAll().concat(temporalidadeAtual.filter(y=>!tapYearOptionsAll().includes(y))),temporalidadeAtual)}<button class="btn sm" id="tap_addyear" type="button" title="Adicionar outra opção de ano">+ ano</button></div>`,
+    perspectiva:`<select id="tap_perspectiva">${perspOptsHtml}</select>`,
+    objetivoGeral:`<select id="tap_objgeral">${`<option value="">Selecione…</option>`+geraisOpts.map(x=>`<option value="${esc(x)}" ${geralAtual===x?"selected":""}>${esc(x)}</option>`).join("")}</select>`,
+    objetivoEspecifico:`<select id="tap_objespecifico">${`<option value="">Selecione…</option>`+especificosOpts.map(x=>`<option value="${esc(x)}" ${especificoAtual===x?"selected":""}>${esc(x)}</option>`).join("")}</select>`
+  };
+  // o rótulo aponta para o controle (leitores de tela; clicar no rótulo foca o campo)
+  const idDoControle=html=>{ const m=/^<(?:input|select|textarea)[^>]*\sid="([^"]+)"/.exec(html); return m?m[1]:""; };
+  const secoesForm=SECOES.map((sc,ix)=>{
+    const cs=sc.campos.filter(campoTAPVisivel); if(!cs.length) return "";
+    return `<section class="tap-sec" data-tapsec="${sc.id}"><h3 class="tap-sec-tit"><span class="tap-sec-num">${ix+1}</span>${esc(sc.titulo)}</h3>
+      <div class="tap-form-grade">${cs.map(id=>{ const c=controles[id], alvo=idDoControle(c);
+        return `<div class="tap-campo${LARGOS.has(id)?" largo":""}" data-tapcampo="${id}">${alvo?`<label class="tap-row-label" for="${alvo}">`:`<div class="tap-row-label">`}${esc(rotuloTAP(id))}${alvo?"</label>":"</div>"}${c}${DO_PROJETO.has(id)?`<div class="hint">Vem do cadastro do projeto (ícone de lápis, ao lado do nome).</div>`:""}</div>`; }).join("")}</div></section>`;
+  }).join("");
+  return barra+`<fieldset class="tap-fieldset"><legend class="sr-only">Termo de Abertura do Projeto</legend><div class="tap-table tap-form">${secoesForm}</div></fieldset>
+  <div class="tap-acoes no-print"><button class="btn primary" id="tap_save">Salvar TAP</button><button class="btn" id="tap_cancel">Cancelar</button></div>`;
 }
 
 /** Repovoa o select de Objetivo Geral (e zera o Específico) quando a
@@ -10016,7 +10250,11 @@ function renderCronoCardsMobile(){
     </div>`;
     if(expP) roots.forEach(r=>card(r,0));
   });
-  if(!html) return filterBar(true)+emptyState("Nenhum resultado","Ajuste os filtros para ver atividades.");
+  if(!html){
+    const pidVazio = view==="project" ? currentProjectId : "";
+    if(pidVazio && !DATA.tasks.some(t=>t.projectId===pidVazio)) return filterBar(true)+vazioSemAtividades(pidVazio);
+    return filterBar(true)+emptyState("Nenhum resultado","Ajuste os filtros para ver atividades.",botaoVazio("filtros"));
+  }
   return filterBar(true)+expandBar("crono")+`<div class="mcards" aria-label="Cronograma de atividades">${html}</div>
     <p class="hint no-print" style="margin-top:10px">Toque numa atividade para ver os detalhes.</p>`;
 }
@@ -10417,7 +10655,7 @@ const PAPEIS=[
   {id:"convidado",    nome:"Convidado externo",       nivel:0, descricao:"Vê só os projetos em que foi incluído, sem os custos. Só por projeto."}
 ];
 const NIVEL_PAPEL=Object.fromEntries(PAPEIS.map(p=>[p.id,p.nivel]));
-function nivelDoPapel(p){ return p==="admin_sistema" ? 99 : (NIVEL_PAPEL[p]!==undefined ? NIVEL_PAPEL[p] : -1); }
+function nivelDoPapel(p){ return p==="admin_sistema" ? 99 : (Object.prototype.hasOwnProperty.call(NIVEL_PAPEL,p) ? NIVEL_PAPEL[p] : -1); }
 function nomeDoPapel(p){ if(p==="admin_sistema") return "Administração do sistema"; const x=PAPEIS.find(y=>y.id===p); return x?x.nome:"—"; }
 function papelMaior(a,b){ return nivelDoPapel(a)>=nivelDoPapel(b) ? (a||b) : b; }
 // seção do Firestore editada a partir de cada aba do projeto
@@ -10430,7 +10668,7 @@ function souAdminSistema(){ return !comPermissoes() || !!souAdminMaster; }
 function meuPapelNoProjeto(pid){
   if(!comPermissoes() || souAdminMaster) return "admin_sistema";
   const a=DATA.acessoProjetos[pid]; if(!a) return "";
-  return (a.papeis||{})[String(myEmail||"").toLowerCase()]||"";
+  return papelEfetivo(a,myEmail);
 }
 function meuPapelNoGrupo(gid){
   if(!comPermissoes() || souAdminMaster) return "admin_sistema";
@@ -10530,10 +10768,10 @@ function registrarOperacoesAdministracao(B){
   // exceções por projeto: qualquer papel, menos administrar (isso é do grupo)
   const PAPEIS_EXCECAO=PAPEIS.filter(p=>p.id!=="admin_grupo").map(p=>p.id);
 
+  // compatibilidade: acesso de um projeto com um grupo só
   function acessoDoProjeto(membrosGrupo,excecoes){
-    const papeis=Object.assign({},membrosGrupo||{});
-    Object.keys(excecoes||{}).forEach(em=>{ papeis[em]=papelMaior(papeis[em],excecoes[em]); });
-    return {papeis, leitores:Object.keys(papeis).sort()};
+    const a=montarAcesso("g",[],()=>membrosGrupo||{},excecoes||{});
+    return {papeis:a.papeis, leitores:a.leitores};
   }
   async function emLotes(ops){
     // ops: [ (lote)=>void ]; o Firestore aceita até 500 operações por lote
@@ -10541,12 +10779,59 @@ function registrarOperacoesAdministracao(B){
       const b=db.batch(); ops.slice(i,i+400).forEach(f=>f(b)); await b.commit();
     }
   }
-  async function garantirUsuarios(emails,gid){
-    const novos=[];
+  /* Regrava o acesso de projetos. mudancas: Map(pid -> {grupoId?, gruposConvidados?, excecoes?, membros?: Map(gid -> membros)}).
+     As regras conferem cada cópia de grupo que mudou com o grupo de verdade, lendo o grupo
+     (até 20 leituras por lote): por isso os projetos vão em lotes com poucos grupos diferentes.
+     Se um lote for recusado, tenta projeto a projeto e informa quantos não foram. */
+  async function regravarAcesso(mudancas){
+    const itens=[];
+    mudancas.forEach((m,pid)=>{
+      const h=est.headers.get(pid); if(!h) return;
+      const grupoId = m.grupoId!==undefined ? m.grupoId : (h.grupoId||"");
+      const conv = m.gruposConvidados!==undefined ? m.gruposConvidados : (h.gruposConvidados||[]);
+      const exc = m.excecoes!==undefined ? m.excecoes : (h.excecoes||{});
+      // a cópia de um grupo que NÃO está mudando fica exatamente como está gravada (as regras
+      // aceitam cópia inalterada sem conferir); só entra a versão atual do grupo quando ainda não há cópia
+      const guardada=h.membrosPorGrupo||null;
+      const membrosDe=g=>(m.membros && m.membros.has(g)) ? m.membros.get(g)
+        : (guardada && guardada[g] && typeof guardada[g]==="object") ? guardada[g] : U.membrosAtuais(g,h);
+      const a=montarAcesso(grupoId,conv,membrosDe,exc);
+      const campos={membrosPorGrupo:a.membrosPorGrupo, papeis:a.papeis, leitores:a.leitores, atualizadoPor:est.email};
+      if(m.excecoes!==undefined) campos.excecoes=a.excecoes;
+      if(m.gruposConvidados!==undefined) campos.gruposConvidados=a.gruposConvidados;
+      if(m.grupoId!==undefined && m.grupoId!==h.grupoId) campos.grupoId=a.grupoId;
+      itens.push({pid, campos, grupos:new Set(Object.keys(a.membrosPorGrupo))});
+    });
+    const lotes=[]; let atual=null;
+    itens.forEach(it=>{
+      const juntos=atual ? new Set([...atual.grupos,...it.grupos]) : it.grupos;
+      if(!atual || juntos.size>12 || atual.itens.length>=300){ atual={itens:[],grupos:new Set()}; lotes.push(atual); }
+      atual.itens.push(it); it.grupos.forEach(g=>atual.grupos.add(g));
+    });
+    let falhas=0; const aceitos=[], recusados=[];
+    for(const l of lotes){
+      try{ const b=db.batch(); l.itens.forEach(it=>b.update(db.doc("projetos/"+it.pid),it.campos)); await b.commit(); aceitos.push(...l.itens); }
+      catch(e){
+        for(const it of l.itens){ try{ await db.doc("projetos/"+it.pid).update(it.campos); aceitos.push(it); }catch(e2){ falhas++; recusados.push(it.pid); } }
+      }
+    }
+    aplicarAcessoLocal(aceitos);
+    return {total:itens.length, falhas, recusados};
+  }
+  // a cópia local já fica com o que foi gravado (o tempo real confirma depois)
+  function aplicarAcessoLocal(itens){ itens.forEach(it=>{ const h=est.headers.get(it.pid); if(h) est.headers.set(it.pid,Object.assign({},h,JSON.parse(JSON.stringify(it.campos)))); }); est.versao++; }
+  const projetosDoGrupo=gid=>Array.from(est.headers.entries()).filter(([pid,h])=>h.grupoId===gid || (h.gruposConvidados||[]).includes(gid)).map(([pid])=>pid);
+  // cria o cadastro de quem ainda não tem (com o nome informado); a Administração também completa nomes vazios
+  async function garantirUsuarios(emails,gid,nomes){
+    const novos=[]; nomes=nomes||{};
     for(const em of emails){
+      const nome=String(nomes[em]||"").trim().slice(0,200);
       const s=await db.doc("usuarios/"+em).get().catch(()=>null);
-      if(s && s.exists) continue;
-      novos.push(b=>b.set(db.doc("usuarios/"+em),{email:em, nome:"", ativo:true, criadoPorGrupo:gid||"", criadoPor:est.email, criadoEm:FV.serverTimestamp()}));
+      if(s && s.exists){
+        if(nome && ehAdmin() && !String((s.data()||{}).nome||"").trim()) novos.push(b=>b.set(db.doc("usuarios/"+em),{nome, atualizadoPor:est.email, atualizadoEm:FV.serverTimestamp()},{merge:true}));
+        continue;
+      }
+      novos.push(b=>b.set(db.doc("usuarios/"+em),{email:em, nome, ativo:true, criadoPorGrupo:gid||"", criadoPor:est.email, criadoEm:FV.serverTimestamp()}));
     }
     return novos;
   }
@@ -10586,16 +10871,14 @@ function registrarOperacoesAdministracao(B){
     const membros=validarMembros(dados.membros, PAPEIS_GRUPO);
     if(!ehAdmin() && membros[est.email]!=="admin_grupo") throw new Error("Você não pode tirar a si mesmo da administração do grupo (peça à Administração do sistema).");
     const nome=String(dados.nome||atual.nome||"").trim()||atual.nome;
-    const ops=await garantirUsuarios(Object.keys(membros),gid);
+    // primeiro o cadastro das pessoas e o grupo; depois o acesso dos projetos em que o grupo está
+    const ops=await garantirUsuarios(Object.keys(membros),gid,dados.nomes);
     ops.push(b=>b.set(db.doc("grupos/"+gid),{nome, membros, membrosEmails:Object.keys(membros).sort(), atualizadoPor:est.email, atualizadoEm:FV.serverTimestamp()}));
-    est.headers.forEach((h,pid)=>{
-      if(h.grupoId!==gid) return;
-      const a=acessoDoProjeto(membros,h.excecoes);
-      ops.push(b=>b.update(db.doc("projetos/"+pid),{papeis:a.papeis, leitores:a.leitores, atualizadoPor:est.email}));
-    });
     await emLotes(ops);
     est.grupos.set(gid,Object.assign({},atual,{nome,membros,membrosEmails:Object.keys(membros)}));
-    return JSON.stringify({ok:true});
+    const mud=new Map(); projetosDoGrupo(gid).forEach(pid=>mud.set(pid,{membros:new Map([[gid,membros]])}));
+    const r=await regravarAcesso(mud);
+    return JSON.stringify({ok:true, projetos:r.total, falhas:r.falhas, projetosComFalha:(r.recusados||[]).map(pid=>(est.headers.get(pid)||{}).name||pid)});
   }
   async function criarGrupo(nome){
     if(!ehAdmin()) throw new Error("Só a Administração do sistema cria grupos.");
@@ -10607,29 +10890,41 @@ function registrarOperacoesAdministracao(B){
   async function excluirGrupo(gid){
     if(!ehAdmin()) throw new Error("Só a Administração do sistema exclui grupos.");
     const temProjetos=Array.from(est.headers.values()).some(h=>h.grupoId===gid);
-    if(temProjetos) throw new Error("Este grupo ainda tem projetos. Mova-os para outro grupo antes de excluir.");
+    if(temProjetos) throw new Error("Este grupo ainda é dono de projetos. Mova-os para outro grupo antes de excluir.");
+    // onde ele era convidado, sai do projeto antes
+    const mud=new Map(); est.headers.forEach((h,pid)=>{ if((h.gruposConvidados||[]).includes(gid)) mud.set(pid,{gruposConvidados:h.gruposConvidados.filter(x=>x!==gid)}); });
+    if(mud.size){ const r=await regravarAcesso(mud); if(r.falhas) throw new Error("Não consegui tirar o grupo de "+r.falhas+" projeto(s) em que ele é convidado."); }
     await db.doc("grupos/"+gid).delete();
     return JSON.stringify({ok:true});
   }
 
   /* ---------------- acesso de um projeto (exceções) ---------------- */
-  async function atualizarAcessoProjeto(pid,excecoes){
+  // exceções e grupos convidados: quem administra o grupo DONO (ou a Administração)
+  async function atualizarAcessoProjeto(pid,excecoes,gruposConvidados){
     const h=est.headers.get(pid); if(!h) throw new Error("Projeto não encontrado.");
-    if(!souAdminDoGrupo(h.grupoId)) throw new Error("Só a Administração ou o Administrador do grupo altera o acesso.");
+    if(!souAdminDoGrupo(h.grupoId)) throw new Error("Só a Administração ou o Administrador do grupo dono altera o acesso.");
     const exc=validarMembros(excecoes, PAPEIS_EXCECAO);
-    const g=est.grupos.get(h.grupoId);
-    const a=acessoDoProjeto((g&&g.membros)||{},exc);
+    const m={excecoes:exc};
+    if(gruposConvidados!==undefined && gruposConvidados!==null){
+      const conv=Array.from(new Set(gruposConvidados.map(String))).filter(g=>g && g!==h.grupoId);
+      if(conv.length>LIMITE_GRUPOS_CONVIDADOS) throw new Error(`No máximo ${LIMITE_GRUPOS_CONVIDADOS} grupos convidados por projeto.`);
+      const novos=conv.filter(g=>!(h.gruposConvidados||[]).includes(g));
+      // para convidar, este navegador precisa enxergar o grupo (é de lá que vêm os membros)
+      novos.forEach(g=>{ if(!est.grupos.has(g)) throw new Error("Você só pode convidar grupos que enxerga (dos quais participa)."); });
+      m.gruposConvidados=conv;
+    }
     const ops=await garantirUsuarios(Object.keys(exc),h.grupoId);
-    ops.push(b=>b.update(db.doc("projetos/"+pid),{excecoes:exc, papeis:a.papeis, leitores:a.leitores, atualizadoPor:est.email}));
-    await emLotes(ops);
+    if(ops.length) await emLotes(ops);
+    const r=await regravarAcesso(new Map([[pid,m]]));
+    if(r.falhas) throw new Error("O servidor não aceitou a mudança de acesso.");
     return JSON.stringify({ok:true});
   }
   async function moverProjetoGrupo(pid,gid){
     if(!ehAdmin()) throw new Error("Só a Administração do sistema muda o grupo de um projeto.");
     const h=est.headers.get(pid), g=est.grupos.get(gid);
     if(!h||!g) throw new Error("Projeto ou grupo não encontrado.");
-    const a=acessoDoProjeto(g.membros,h.excecoes);
-    await db.doc("projetos/"+pid).update({grupoId:gid, papeis:a.papeis, leitores:a.leitores, atualizadoPor:est.email});
+    const r=await regravarAcesso(new Map([[pid,{grupoId:gid, gruposConvidados:(h.gruposConvidados||[]).filter(x=>x!==gid)}]]));
+    if(r.falhas) throw new Error("O servidor não aceitou a mudança de grupo.");
     return JSON.stringify({ok:true});
   }
 
@@ -10656,11 +10951,16 @@ function registrarOperacoesAdministracao(B){
       if(u.adminSistema!==false) ops.push(b=>b.set(db.doc("config/admins"),{emails:FV.arrayRemove(email)},{merge:true}));
       const gruposMud=new Map();
       est.grupos.forEach((g,gid)=>{ if((g.membros||{})[email]){ const m=Object.assign({},g.membros); delete m[email]; gruposMud.set(gid,m); ops.push(b=>b.update(db.doc("grupos/"+gid),{membros:m, membrosEmails:Object.keys(m).sort()})); } });
+      await emLotes(ops);
+      gruposMud.forEach((m,gid)=>{ const g=est.grupos.get(gid); if(g) est.grupos.set(gid,Object.assign({},g,{membros:m,membrosEmails:Object.keys(m)})); });
+      const mud=new Map();
       est.headers.forEach((h,pid)=>{
         const exc=Object.assign({},h.excecoes||{}); const tinha=!!exc[email]; delete exc[email];
-        const membros=gruposMud.get(h.grupoId) || ((est.grupos.get(h.grupoId)||{}).membros) || {};
-        if(tinha || gruposMud.has(h.grupoId)){ const a=acessoDoProjeto(membros,exc); ops.push(b=>b.update(db.doc("projetos/"+pid),{excecoes:exc, papeis:a.papeis, leitores:a.leitores})); }
+        const grupos=[h.grupoId,...(h.gruposConvidados||[])].filter(g=>gruposMud.has(g));
+        if(tinha || grupos.length) mud.set(pid,Object.assign({membros:new Map(grupos.map(g=>[g,gruposMud.get(g)]))}, tinha?{excecoes:exc}:{}));
       });
+      const r=await regravarAcesso(mud);
+      return JSON.stringify({ok:true, falhas:r.falhas});
     }
     await emLotes(ops);
     return JSON.stringify({ok:true});
@@ -10689,7 +10989,8 @@ function registrarOperacoesAdministracao(B){
   }
   function destinatariosDoProjeto(pid){
     const h=est.headers.get(pid)||{};
-    const doEscritorio=Object.keys(h.papeis||{}).filter(em=>nivelDoPapel(h.papeis[em])>=5);
+    const papeis=U.acessoDoCabecalho(h).papeis;
+    const doEscritorio=Object.keys(papeis).filter(em=>nivelDoPapel(papeis[em])>=5);
     return Array.from(new Set(doEscritorio.concat(est.admins||[])));
   }
   async function criarPedido(dados,destinatarios,assunto,linhas){
@@ -10720,9 +11021,13 @@ function registrarOperacoesAdministracao(B){
     const qs=await db.collection("usuarios").get();
     const usuarios=qs.docs.map(d=>{ const x=d.data(); return {email:d.id, nome:x.nome||"", ativo:x.ativo===true, criadoPorGrupo:x.criadoPorGrupo||""}; });
     const grupos=Array.from(est.grupos.values()).map(g=>({id:g.id, nome:g.nome||"", membros:Object.assign({},g.membros||{})}));
-    const excecoesPorProjeto={}, grupoDoProjeto={};
-    est.headers.forEach((h,pid)=>{ grupoDoProjeto[pid]=h.grupoId||""; if(h.excecoes && Object.keys(h.excecoes).length) excecoesPorProjeto[pid]=Object.assign({},h.excecoes); });
-    return JSON.stringify({usuarios, grupos, admins:(est.admins||[]).slice(), excecoesPorProjeto, grupoDoProjeto});
+    const excecoesPorProjeto={}, grupoDoProjeto={}, convidadosPorProjeto={};
+    est.headers.forEach((h,pid)=>{
+      grupoDoProjeto[pid]=h.grupoId||"";
+      if(h.excecoes && Object.keys(h.excecoes).length) excecoesPorProjeto[pid]=Object.assign({},h.excecoes);
+      if((h.gruposConvidados||[]).length) convidadosPorProjeto[pid]=h.gruposConvidados.slice();
+    });
+    return JSON.stringify({usuarios, grupos, admins:(est.admins||[]).slice(), excecoesPorProjeto, grupoDoProjeto, convidadosPorProjeto});
   }
   async function importarPessoas(arq){
     if(!ehAdmin()) throw new Error("Só a Administração do sistema importa pessoas e acesso.");
@@ -10752,16 +11057,19 @@ function registrarOperacoesAdministracao(B){
     });
     const admins=(arq.admins||[]).map(emailNorm).filter(e=>/@/.test(e));
     if(admins.length) ops.push(b=>b.set(db.doc("config/admins"),{emails:FV.arrayUnion(...admins)},{merge:true}));
-    // acesso de cada projeto que existe aqui: grupo (do arquivo, se veio) + exceções (do arquivo, se vieram)
-    est.headers.forEach((h,pid)=>{
-      const membros=membrosPorGrupo.get(h.grupoId) || ((est.grupos.get(h.grupoId)||{}).membros) || {};
-      const exc=(arq.excecoesPorProjeto && arq.excecoesPorProjeto[pid]) ? Object.assign({}, h.excecoes||{}, validarMembros(arq.excecoesPorProjeto[pid], PAPEIS_EXCECAO)) : (h.excecoes||{});
-      const a=acessoDoProjeto(membros,exc);
-      ops.push(b=>b.update(db.doc("projetos/"+pid),{excecoes:exc, papeis:a.papeis, leitores:a.leitores, atualizadoPor:est.email}));
-      nP++;
-    });
     await emLotes(ops);
-    return JSON.stringify({ok:true, usuarios:nU, grupos:nG, projetos:nP});
+    membrosPorGrupo.forEach((m,gid)=>{ est.grupos.set(gid,Object.assign({id:gid},est.grupos.get(gid)||{},{membros:m,membrosEmails:Object.keys(m)})); });
+    // acesso de cada projeto que existe aqui: grupos (do arquivo, se vieram) + exceções e convidados (do arquivo, somados)
+    const mud=new Map();
+    est.headers.forEach((h,pid)=>{
+      const m={membros:membrosPorGrupo};
+      if(arq.excecoesPorProjeto && arq.excecoesPorProjeto[pid]) m.excecoes=Object.assign({}, h.excecoes||{}, validarMembros(arq.excecoesPorProjeto[pid], PAPEIS_EXCECAO));
+      const conv=(arq.convidadosPorProjeto||{})[pid];
+      if(Array.isArray(conv)) m.gruposConvidados=Array.from(new Set([...(h.gruposConvidados||[]),...conv.filter(g=>est.grupos.has(g))])).slice(0,LIMITE_GRUPOS_CONVIDADOS);
+      mud.set(pid,m); nP++;
+    });
+    const r=await regravarAcesso(mud);
+    return JSON.stringify({ok:true, usuarios:nU, grupos:nG, projetos:nP, falhas:r.falhas});
   }
 
   /* ---------------- e-mails pela fila (enviados pela tarefa agendada) ---------------- */
@@ -10773,7 +11081,17 @@ function registrarOperacoesAdministracao(B){
     return {ok:true, enviadoPara:para, anexado:!!anexoHtml, naFila:true};
   }
 
+  async function nomesDePessoas(emails){
+    const r={};
+    await Promise.all((emails||[]).slice(0,300).map(async em=>{
+      const s=await db.doc("usuarios/"+em).get().catch(()=>null);
+      if(s && s.exists && (s.data()||{}).nome) r[em]=String(s.data().nome);
+    }));
+    return JSON.stringify(r);
+  }
+
   Object.assign(B.extensoes,{
+    apiNomesDePessoas:nomesDePessoas,
     apiSalvarGrupo:salvarGrupo, apiCriarGrupo:criarGrupo, apiExcluirGrupo:excluirGrupo,
     apiAtualizarAcessoProjeto:atualizarAcessoProjeto, apiMoverProjetoGrupo:moverProjetoGrupo,
     apiListarUsuarios:listarUsuarios, apiSalvarUsuario:salvarUsuario,
@@ -10781,7 +11099,27 @@ function registrarOperacoesAdministracao(B){
     solicitarExclusaoProjeto:(pid,j)=>solicitarAcaoProjeto(pid,"exclusao_projeto","excluir o projeto",j),
     solicitarAcaoLinhaDeBase:(pid,tipo,j)=>solicitarAcaoProjeto(pid,"linha_base",tipo==="excluir"?"excluir a linha de base":"redefinir a linha de base",j),
     solicitarExclusaoPortfolio, enviarRelatorioPorEmail,
-    apiExportarPessoas:exportarPessoas, apiImportarPessoas:importarPessoas
+    apiExportarPessoas:exportarPessoas, apiImportarPessoas:importarPessoas,
+    // ao abrir o app: (1) projetos gravados antes dos grupos convidados ganham a cópia dos grupos;
+    // (2) cópias de grupo desatualizadas (um salvamento de grupo que não chegou a algum projeto)
+    // são refeitas por quem abre e lê o grupo. Assim nenhuma mudança de grupo fica pelo caminho.
+    apiMigrarAcesso: async ()=>{
+      const mud=new Map();
+      const igual=(a,b)=>{ const ka=Object.keys(a||{}).sort(), kb=Object.keys(b||{}).sort(); return ka.length===kb.length && ka.every((k,i)=>k===kb[i] && a[k]===b[k]); };
+      est.headers.forEach((h,pid)=>{
+        if(!(ehAdmin() || (h.leitores||[]).includes(est.email))) return;
+        if(!h.membrosPorGrupo){ if(!h.grupoId || est.grupos.has(h.grupoId)) mud.set(pid,{}); return; }
+        const velhos=new Map();
+        [h.grupoId,...(h.gruposConvidados||[])].filter(Boolean).forEach(g=>{
+          const real=est.grupos.get(g);
+          if(real && real.membros && !igual(real.membros,h.membrosPorGrupo[g])) velhos.set(g,real.membros);
+        });
+        if(velhos.size) mud.set(pid,{membros:velhos});
+      });
+      if(!mud.size) return JSON.stringify({ok:true, migrados:0});
+      const r=await regravarAcesso(mud);
+      return JSON.stringify({ok:true, migrados:r.total-r.falhas, falhas:r.falhas});
+    }
   });
   B.util.enfileirarEmail=enfileirarEmail; B.util.htmlAviso=htmlAviso; B.util.acessoDoProjeto=acessoDoProjeto;
 }
@@ -10806,6 +11144,7 @@ async function openAdministracaoModal(aba){
   abaAdmin = (aba && abas.some(a=>a.id===aba)) ? aba : abas[0].id;
   showModal("Administração",`<div class="view-toggle" id="admAbas" role="tablist">${abas.map(a=>`<button class="vtbtn ${a.id===abaAdmin?"on":""}" data-admaba="${a.id}" role="tab">${a.label}</button>`).join("")}</div>
     <div id="admCorpo" style="min-height:240px"><p class="hint">Carregando…</p></div>`,`<button class="btn" id="adm_close">Fechar</button>`,true);
+  { const m=$("#overlay .modal"); if(m) m.classList.add("modal-adm"); } // tabelas de pessoas e grupos pedem mais largura
   $("#adm_close").onclick=closeModal;
   $$("[data-admaba]").forEach(b=>b.onclick=()=>{ abaAdmin=b.dataset.admaba; $$("[data-admaba]").forEach(x=>x.classList.toggle("on",x===b)); renderAbaAdmin(); });
   renderAbaAdmin();
@@ -10824,14 +11163,34 @@ const legendaPapeis=()=>`<details class="help-sec" style="margin-top:12px"><summ
 // incluirConvidado: lista de exceção de projeto (tem Convidado, não tem Administrador do grupo)
 const opcoesPapel=(sel,incluirConvidado)=>PAPEIS.filter(p=>incluirConvidado ? p.id!=="admin_grupo" : p.id!=="convidado").map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nome)}</option>`).join("");
 
+/* resultado de salvar um grupo: avisa quando algum projeto não recebeu a mudança */
+function avisarGrupoSalvo(rjson,msgOk){
+  let r={}; try{ r=typeof rjson==="string"?JSON.parse(rjson):(rjson||{}); }catch(e){}
+  if(r.falhas){
+    const nomes=(r.projetosComFalha||[]).slice(0,5).join(", ");
+    toast(`Grupo salvo, mas ${r.falhas} projeto(s) ainda não receberam a mudança${nomes?` (${nomes})`:""}. Salve o grupo de novo; o app também tenta sozinho quando alguém do grupo abre.`,true,true);
+    return false;
+  }
+  toast(msgOk); return true;
+}
+
 /* ---------- Pessoas ---------- */
 async function renderAbaPessoas(box){
   const r=JSON.parse(await servidorCall("apiListarUsuarios"));
   const admins=new Set(r.admins||[]); if(r.adminInicial) admins.add(r.adminInicial);
-  const gruposDe=em=>(DATA.grupos||[]).filter(g=>(g.membros||{})[em]).map(g=>`${esc(g.nome)} <span class="hint" style="display:inline">(${esc(nomeDoPapel(g.membros[em]))})</span>`).join(", ");
+  const grupos=(DATA.grupos||[]).slice().sort((a,b)=>String(a.nome).localeCompare(String(b.nome),"pt-BR"));
+  const gruposDe=em=>{
+    const dele=grupos.filter(g=>(g.membros||{})[em]);
+    const outros=grupos.filter(g=>!(g.membros||{})[em]);
+    const pilulas=dele.map(g=>`<span class="pg-pilula" data-pggrupo="${esc(g.id)}"><span class="pg-nome" title="${esc(g.nome)}">${esc(g.nome)}</span><select data-pgpapel aria-label="Papel em ${esc(g.nome)}">${opcoesPapel(g.membros[em],false)}</select><button class="pg-tirar" data-pgtirar title="Tirar de ${esc(g.nome)}" aria-label="Tirar de ${esc(g.nome)}">✕</button></span>`).join("");
+    const incluir=outros.length&&u_ativo(em)?`<details class="pg-incluir"><summary>+ grupo</summary><div class="pg-incluir-corpo"><select data-pgnovo aria-label="Grupo">${outros.map(g=>`<option value="${esc(g.id)}">${esc(g.nome)}</option>`).join("")}</select><select data-pgnovopapel aria-label="Papel">${opcoesPapel("equipe",false)}</select><button class="btn sm primary" data-pgincluir>Incluir</button></div></details>`:"";
+    return `<div class="pg-lista">${pilulas||'<span class="hint">sem grupo</span>'}${incluir}</div>`;
+  };
+  const ativos=new Set((r.usuarios||[]).filter(u=>u.ativo!==false).map(u=>u.email));
+  const u_ativo=em=>ativos.has(em);
   const linhas=(r.usuarios||[]).sort((a,b)=>String(a.email).localeCompare(String(b.email))).map(u=>`<tr data-usu="${esc(u.email)}">
       <td><strong>${esc(u.nome||"—")}</strong><div class="hint">${esc(u.email)}</div></td>
-      <td style="font-size:12px">${gruposDe(u.email)||'<span class="hint">sem grupo</span>'}</td>
+      <td style="font-size:12px">${gruposDe(u.email)}</td>
       <td style="text-align:center"><input type="checkbox" data-admsis ${admins.has(u.email)?"checked":""} ${u.email===r.adminInicial||u.email===myEmail?"disabled":""} title="Administração do sistema"></td>
       <td style="text-align:center"><input type="checkbox" data-ativo ${u.ativo!==false?"checked":""} ${u.email===myEmail?"disabled":""}></td>
     </tr>`).join("");
@@ -10839,15 +11198,39 @@ async function renderAbaPessoas(box){
       <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="admNovoEmail" type="email" placeholder="e-mail" style="flex:2 1 200px"><input id="admNovoNome" placeholder="nome" style="flex:1 1 140px"><button class="btn primary" id="admAddPessoa">Cadastrar</button></div>
       <div class="hint">Depois de cadastrar, inclua a pessoa num grupo (aba "Grupos e papéis") ou como exceção num projeto. Sem grupo nem exceção, ela entra mas não vê projetos.</div></div>
     <div class="tbl-wrap"><table class="crono"><thead><tr><th>Pessoa</th><th>Grupos</th><th style="text-align:center">Administração<br>do sistema</th><th style="text-align:center">Ativa</th></tr></thead><tbody>${linhas||'<tr><td colspan="4" class="hint" style="padding:16px">Ninguém cadastrado ainda.</td></tr>'}</tbody></table></div>
-    <p class="hint" style="margin-top:8px">Desativar alguém tira a pessoa de todos os grupos e projetos. ${r.adminInicial?`O administrador inicial (${esc(r.adminInicial)}) é definido nas regras do Firestore e não pode ser desativado aqui.`:""}</p>`;
+    <p class="hint" style="margin-top:8px">Mudanças nos grupos valem na hora, para todos os projetos do grupo. Desativar alguém tira a pessoa de todos os grupos e projetos. ${r.adminInicial?`O administrador inicial (${esc(r.adminInicial)}) é definido nas regras do Firestore e não pode ser desativado aqui.`:""}</p>`;
   $("#admAddPessoa").onclick=async()=>{
     const email=$("#admNovoEmail").value.trim(), nome=$("#admNovoNome").value.trim();
     if(!email){ toast("Informe o e-mail",true); return; }
     try{ await servidorCall("apiSalvarUsuario",{email,nome,ativo:true}); toast("Pessoa cadastrada"); renderAbaAdmin(); }
     catch(e){ toast((e&&e.message)||"Não foi possível cadastrar",true); }
   };
+  // grupos de uma pessoa: cada mudança grava o grupo inteiro (e o acesso aos projetos dele)
+  const mudarGrupo=async(gid,email,papel,msg)=>{
+    const g=(DATA.grupos||[]).find(x=>x.id===gid); if(!g) return;
+    const membros=Object.assign({},g.membros||{});
+    if(papel) membros[email]=papel; else delete membros[email];
+    box.querySelectorAll("select,button,input").forEach(x=>x.disabled=true);
+    try{ avisarGrupoSalvo(await servidorCall("apiSalvarGrupo",gid,{nome:g.nome, membros}),msg); await loadData(false); render(); }
+    catch(e){ toast((e&&e.message)||"Não foi possível salvar",true); }
+    renderAbaAdmin();
+  };
   $$("#admCorpo [data-usu]").forEach(tr=>{
     const email=tr.dataset.usu;
+    tr.querySelectorAll("[data-pggrupo]").forEach(pl=>{
+      const gid=pl.dataset.pggrupo, g=(DATA.grupos||[]).find(x=>x.id===gid)||{};
+      pl.querySelector("[data-pgpapel]").onchange=e=>mudarGrupo(gid,email,e.target.value,`Papel em ${g.nome}: ${nomeDoPapel(e.target.value)}`);
+      pl.querySelector("[data-pgtirar]").onclick=()=>{
+        if(!confirm(`Tirar ${email} do grupo "${g.nome}"? A pessoa deixa de ver os projetos do grupo (a não ser por outro grupo ou exceção).`)) return;
+        mudarGrupo(gid,email,"",`Saiu de ${g.nome}`);
+      };
+    });
+    const inc=tr.querySelector("[data-pgincluir]");
+    if(inc) inc.onclick=()=>{
+      const gid=tr.querySelector("[data-pgnovo]").value, papel=tr.querySelector("[data-pgnovopapel]").value;
+      const g=(DATA.grupos||[]).find(x=>x.id===gid)||{};
+      mudarGrupo(gid,email,papel,`Incluída em ${g.nome} como ${nomeDoPapel(papel)}`);
+    };
     tr.querySelector("[data-admsis]").onchange=async e=>{
       try{ await servidorCall("apiSalvarUsuario",{email, adminSistema:e.target.checked}); toast(e.target.checked?"Agora é Administração do sistema":"Saiu da Administração do sistema"); }
       catch(err){ e.target.checked=!e.target.checked; toast((err&&err.message)||"Não foi possível salvar",true); }
@@ -10882,12 +11265,19 @@ async function esperarGrupo(gid){ for(let i=0;i<40;i++){ await loadData(false); 
 function renderEditorGrupo(box,gid){
   const g=(DATA.grupos||[]).find(x=>x.id===gid); if(!g){ grupoEmEdicao=null; renderAbaGrupos(box); return; }
   const membros=Object.assign({},g.membros||{});
+  const nomesNovos={};            // nome digitado para quem está sendo incluído agora
+  const nomesConhecidos={};       // nome do cadastro de quem já existe
+  const nomeDe=em=>nomesNovos[em]||nomesConhecidos[em]||"";
+  servidorCall("apiNomesDePessoas",Object.keys(membros)).then(r=>{
+    Object.assign(nomesConhecidos,JSON.parse(r||"{}"));
+    if($("#admGrupoNome") && grupoEmEdicao===gid) $$("[data-membro]").forEach(tr=>{ const c=tr.querySelector("[data-nomepessoa]"); if(c) c.textContent=nomeDe(tr.dataset.membro)||""; });
+  }).catch(()=>{});
   const desenhar=()=>{
-    const linhas=Object.keys(membros).sort().map(em=>`<tr data-membro="${esc(em)}"><td>${esc(em)}</td><td><select data-papel>${opcoesPapel(membros[em],false)}</select></td><td><button class="iconbtn" data-tirar title="Tirar do grupo">✕</button></td></tr>`).join("");
+    const linhas=Object.keys(membros).sort((a,b)=>(nomeDe(a)||a).localeCompare(nomeDe(b)||b,"pt-BR")).map(em=>`<tr data-membro="${esc(em)}"><td><strong data-nomepessoa>${esc(nomeDe(em))}</strong><div class="hint">${esc(em)}</div></td><td><select data-papel>${opcoesPapel(membros[em],false)}</select></td><td><button class="iconbtn" data-tirar title="Tirar do grupo">✕</button></td></tr>`).join("");
     box.innerHTML=`<button class="btn sm" id="admVoltarGrupos">← Grupos</button>
       <div class="field" style="margin-top:12px"><label>Nome do grupo</label><input id="admGrupoNome" value="${esc(g.nome)}" ${souAdminMaster?"":"disabled"}></div>
-      <div class="field"><label>Incluir pessoa</label><div style="display:flex;gap:8px;flex-wrap:wrap"><input id="admMembroEmail" type="email" placeholder="e-mail" style="flex:2 1 200px"><select id="admMembroPapel" style="flex:1 1 160px">${opcoesPapel("equipe",false)}</select><button class="btn" id="admAddMembro">Incluir</button></div>
-        <div class="hint">Quem ainda não tem cadastro é cadastrado automaticamente. O papel vale para todos os projetos do grupo.</div></div>
+      <div class="field"><label>Incluir pessoa</label><div style="display:flex;gap:8px;flex-wrap:wrap"><input id="admMembroNome" placeholder="nome" autocomplete="off" style="flex:1 1 160px"><input id="admMembroEmail" type="email" placeholder="e-mail" autocomplete="off" style="flex:2 1 200px"><select id="admMembroPapel" style="flex:1 1 160px">${opcoesPapel("equipe",false)}</select><button class="btn" id="admAddMembro">Incluir</button></div>
+        <div class="hint">Quem ainda não tem cadastro é cadastrado automaticamente, com este nome. O papel vale para todos os projetos do grupo.</div></div>
       <div class="tbl-wrap"><table class="crono"><thead><tr><th>Pessoa</th><th>Papel no grupo</th><th></th></tr></thead><tbody>${linhas||'<tr><td colspan="3" class="hint" style="padding:14px">Nenhuma pessoa ainda.</td></tr>'}</tbody></table></div>
       <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn primary" id="admSalvarGrupo">Salvar grupo</button>${souAdminMaster?`<button class="del-link" id="admExcluirGrupo" style="margin-left:auto">Excluir grupo</button>`:""}</div>
       ${legendaPapeis()}`;
@@ -10895,15 +11285,19 @@ function renderEditorGrupo(box,gid){
     $("#admAddMembro").onclick=()=>{
       const em=$("#admMembroEmail").value.trim().toLowerCase();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast("E-mail inválido",true); return; }
+      const nome=$("#admMembroNome").value.trim().slice(0,200);
+      if(nome) nomesNovos[em]=nome;
       membros[em]=$("#admMembroPapel").value; desenhar();
+      const f=$("#admMembroNome"); if(f) f.focus();
     };
+    ["#admMembroNome","#admMembroEmail"].forEach(sel=>{ const i=$(sel); if(i) i.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#admAddMembro").click(); } }; });
     $$("[data-membro]").forEach(tr=>{
       tr.querySelector("[data-papel]").onchange=e=>{ membros[tr.dataset.membro]=e.target.value; };
       tr.querySelector("[data-tirar]").onclick=()=>{ delete membros[tr.dataset.membro]; desenhar(); };
     });
     $("#admSalvarGrupo").onclick=async()=>{
       const btn=$("#admSalvarGrupo"); btn.disabled=true; btn.textContent="Salvando…";
-      try{ await servidorCall("apiSalvarGrupo",gid,{nome:$("#admGrupoNome").value, membros}); toast("Grupo salvo — o acesso aos projetos do grupo foi atualizado"); await loadData(false); render(); grupoEmEdicao=null; renderAbaAdmin(); }
+      try{ const rs=await servidorCall("apiSalvarGrupo",gid,{nome:$("#admGrupoNome").value, membros, nomes:Object.fromEntries(Object.keys(nomesNovos).filter(em=>membros[em]).map(em=>[em,nomesNovos[em]]))}); avisarGrupoSalvo(rs,"Grupo salvo — o acesso aos projetos do grupo foi atualizado"); await loadData(false); render(); grupoEmEdicao=null; renderAbaAdmin(); }
       catch(e){ btn.disabled=false; btn.textContent="Salvar grupo"; toast((e&&e.message)||"Não foi possível salvar",true); }
     };
     if($("#admExcluirGrupo")) $("#admExcluirGrupo").onclick=async()=>{
@@ -10953,7 +11347,7 @@ function openCadastrarPedidoModal(p){
     try{
       await servidorCall("apiSalvarUsuario",{email:p.solicitante, nome:$("#cpNome").value, ativo:true});
       const gid=$("#cpGrupo").value;
-      if(gid){ const g=grupos.find(x=>x.id===gid); const membros=Object.assign({},g.membros||{}); membros[p.solicitante]=$("#cpPapel").value; await servidorCall("apiSalvarGrupo",gid,{nome:g.nome,membros}); }
+      if(gid){ const g=grupos.find(x=>x.id===gid); const membros=Object.assign({},g.membros||{}); membros[p.solicitante]=$("#cpPapel").value; const rs=await servidorCall("apiSalvarGrupo",gid,{nome:g.nome,membros}); if(JSON.parse(rs||"{}").falhas) avisarGrupoSalvo(rs,""); }
       await servidorCall("apiResponderPedido",p.id,"atendido","Seu acesso foi liberado.");
       toast("Pessoa cadastrada"); await loadData(false); render(); renderAbaAdmin();
     }catch(e){ toast((e&&e.message)||"Não foi possível cadastrar",true); }
@@ -10963,25 +11357,38 @@ function openCadastrarPedidoModal(p){
 /* ---------- Acesso a um projeto (exceções) ---------- */
 function openAcessoProjetoModal(pid){
   const p=projOf(pid); if(!p) return;
-  if(!pode("gerenciarAcesso",pid)){ toast("Só a Administração ou o Administrador do grupo altera o acesso",true); return; }
+  if(!pode("gerenciarAcesso",pid)){ toast("Só a Administração ou o Administrador do grupo dono altera o acesso",true); return; }
   const a=(DATA.acessoProjetos||{})[pid]||{};
-  const g=(DATA.grupos||[]).find(x=>x.id===a.grupoId);
+  const nomeGrupo=gid=>((DATA.grupos||[]).find(x=>x.id===gid)||{}).nome||"(grupo que você não enxerga)";
+  const membrosDe=gid=>{ const g=(DATA.grupos||[]).find(x=>x.id===gid); return (g&&g.membros) || ((a.membrosPorGrupo||{})[gid]) || {}; };
   const exc=Object.assign({},a.excecoes||{});
+  let conv=(a.gruposConvidados||[]).slice();
+  const pilulas=(gid,teto)=>{ const m=membrosDe(gid); return Object.keys(m).sort().map(em=>{ const papel=teto&&_nivelAcesso(m[em])>NIVEL_TETO_GRUPO_CONVIDADO?"gestor":m[em]; return `<span class="pill st-nao" title="${esc(nomeDoPapel(papel))}">${esc(em)} · ${esc(nomeDoPapel(papel))}</span>`; }).join(" ")||'<span class="hint">O grupo ainda não tem pessoas.</span>'; };
   const desenhar=()=>{
     const linhas=Object.keys(exc).sort().map(em=>`<tr data-exc="${esc(em)}"><td>${esc(em)}</td><td><select data-papel>${opcoesPapel(exc[em],true)}</select></td><td><button class="iconbtn" data-tirar title="Tirar">✕</button></td></tr>`).join("");
-    const doGrupo=Object.keys((g&&g.membros)||{}).sort().map(em=>`<span class="pill st-nao" title="${esc(nomeDoPapel(g.membros[em]))}">${esc(em)} · ${esc(nomeDoPapel(g.membros[em]))}</span>`).join(" ");
-    $(".modal-b").innerHTML=`<p class="hint" style="margin-top:-4px">Projeto do grupo <strong>${esc((g&&g.nome)||"—")}</strong>. As pessoas do grupo já têm acesso, cada uma com o seu papel. Aqui você dá papéis <em>só neste projeto</em> — por exemplo, um Convidado externo, ou um Gestor que não é do grupo. Vale sempre o maior papel.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">${doGrupo||'<span class="hint">O grupo ainda não tem pessoas.</span>'}</div>
-      <div class="field"><label>Dar acesso a</label><div style="display:flex;gap:8px;flex-wrap:wrap"><input id="excEmail" type="email" placeholder="e-mail" style="flex:2 1 200px"><select id="excPapel" style="flex:1 1 160px">${opcoesPapel("convidado",true)}</select><button class="btn" id="excAdd">Incluir</button></div></div>
+    const possiveis=(DATA.grupos||[]).filter(g=>g.id!==a.grupoId && !conv.includes(g.id));
+    $(".modal-b").innerHTML=`
+      <h4 class="acesso-sub">Grupo dono: ${esc(nomeGrupo(a.grupoId))}</h4>
+      <p class="hint">As pessoas do grupo dono têm acesso com o seu papel. O Administrador dele é quem cuida do acesso a este projeto.</p>
+      <div class="acesso-pilulas">${pilulas(a.grupoId,false)}</div>
+      <h4 class="acesso-sub">Grupos convidados <span class="hint" style="display:inline">(até ${LIMITE_GRUPOS_CONVIDADOS})</span></h4>
+      <p class="hint">As pessoas de um grupo convidado entram com o papel que têm no grupo, valendo no máximo <strong>Gestor</strong> (não excluem o projeto nem mexem no acesso).</p>
+      ${conv.map(gid=>`<div class="acesso-conv" data-conv="${esc(gid)}"><div class="acesso-conv-topo"><strong>${esc(nomeGrupo(gid))}</strong><button class="btn sm" data-tirarconv type="button">Tirar</button></div><div class="acesso-pilulas">${pilulas(gid,true)}</div></div>`).join("")||'<p class="hint">Nenhum grupo convidado.</p>'}
+      ${conv.length<LIMITE_GRUPOS_CONVIDADOS?(possiveis.length?`<div class="field"><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="convNovo" style="flex:2 1 220px">${possiveis.map(g=>`<option value="${esc(g.id)}">${esc(g.nome)}</option>`).join("")}</select><button class="btn" id="convAdd" type="button">Convidar grupo</button></div></div>`:`<p class="hint">Você só pode convidar grupos dos quais participa.</p>`):""}
+      <h4 class="acesso-sub">Pessoas só neste projeto (exceções)</h4>
+      <p class="hint">Por exemplo, um Convidado externo, ou um Gestor que não é de nenhum grupo. Vale sempre o maior papel.</p>
+      <div class="field"><div style="display:flex;gap:8px;flex-wrap:wrap"><input id="excEmail" type="email" placeholder="e-mail" style="flex:2 1 200px"><select id="excPapel" style="flex:1 1 160px">${opcoesPapel("convidado",true)}</select><button class="btn" id="excAdd" type="button">Incluir</button></div></div>
       <div class="tbl-wrap"><table class="crono"><thead><tr><th>Pessoa</th><th>Papel neste projeto</th><th></th></tr></thead><tbody>${linhas||'<tr><td colspan="3" class="hint" style="padding:14px">Nenhuma exceção.</td></tr>'}</tbody></table></div>`;
     $("#excAdd").onclick=()=>{ const em=$("#excEmail").value.trim().toLowerCase(); if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast("E-mail inválido",true); return; } exc[em]=$("#excPapel").value; desenhar(); };
     $$("[data-exc]").forEach(tr=>{ tr.querySelector("[data-papel]").onchange=e=>{ exc[tr.dataset.exc]=e.target.value; }; tr.querySelector("[data-tirar]").onclick=()=>{ delete exc[tr.dataset.exc]; desenhar(); }; });
+    const ca=$("#convAdd"); if(ca) ca.onclick=()=>{ const v=$("#convNovo").value; if(v && !conv.includes(v)) conv.push(v); desenhar(); };
+    $$("[data-conv]").forEach(d=>{ d.querySelector("[data-tirarconv]").onclick=()=>{ conv=conv.filter(x=>x!==d.dataset.conv); desenhar(); }; });
   };
   showModal("Acesso a este projeto — "+p.name,"",`<button class="btn" id="exc_cancel">Cancelar</button><button class="btn primary" id="exc_save">Salvar acesso</button>`,true);
   desenhar();
   $("#exc_cancel").onclick=closeModal;
   $("#exc_save").onclick=async()=>{
-    try{ await servidorCall("apiAtualizarAcessoProjeto",pid,exc); closeModal(); toast("Acesso atualizado"); await loadData(false); render(); }
+    try{ await servidorCall("apiAtualizarAcessoProjeto",pid,exc,conv); closeModal(); toast("Acesso atualizado"); await loadData(false); render(); }
     catch(e){ toast((e&&e.message)||"Não foi possível salvar",true); }
   };
 }
@@ -11452,14 +11859,45 @@ const resumoArquivo=(a)=>{
     · ${n("tasks")} atividade(s), ${n("risks")} risco(s), ${n("costs")} custo(s), ${n("stakeholders")} stakeholder(s)
     <div class="hint" style="margin-top:4px">Exportado em ${esc(fmtBRfullDT(a.exportadoEm))}${a.exportadoPor?` por ${esc(a.exportadoPor)}`:""}${a.organizacao?` · ${esc(a.organizacao)}`:""}</div></div>`;
 };
-function selectGrupos(id,lista,sel){ return `<select id="${id}">${lista.map(g=>`<option value="${esc(g.id)}" ${g.id===sel?"selected":""}>${esc(g.nome)}</option>`).join("")}</select>`; }
+/* lista de grupos; para a Administração do sistema, com a opção de criar um grupo novo ali mesmo
+   (o grupo nasce vazio: as pessoas são incluídas depois, em Administração › Grupos e papéis) */
+const NOVO_GRUPO="__novo__";
+function podeCriarGrupoAqui(){ return comPermissoes() && souAdminMaster && MODE==="servidor"; }
+function selectGrupos(id,lista,sel,permitirNovo){
+  const novo=permitirNovo && podeCriarGrupoAqui();
+  return `<select id="${id}">${lista.map(g=>`<option value="${esc(g.id)}" ${g.id===sel?"selected":""}>${esc(g.nome)}</option>`).join("")}${novo?`<option value="${NOVO_GRUPO}" ${!lista.length?"selected":""}>+ Criar grupo novo…</option>`:""}</select>
+    ${novo?`<div id="${id}_novo_box" style="margin-top:6px"><input id="${id}_novo" placeholder="Nome do grupo novo (ex.: Projetos importados)" maxlength="120" autocomplete="off">
+      <div class="hint">O grupo começa vazio — inclua as pessoas depois, em Administração › Grupos e papéis. Até lá, só a Administração do sistema vê esses projetos.</div></div>`:""}`;
+}
+function ligarSelectGrupos(id){
+  const s=$("#"+id), box=$("#"+id+"_novo_box"); if(!s||!box) return;
+  const ajustar=foco=>{ const n=s.value===NOVO_GRUPO; box.style.display=n?"":"none"; if(n&&foco){ const i=$("#"+id+"_novo"); if(i) i.focus(); } };
+  s.addEventListener("change",()=>ajustar(true)); ajustar(false);
+}
+function nomeDoGrupoNovoFaltando(id){ const s=$("#"+id); return !!s && s.value===NOVO_GRUPO && !(($("#"+id+"_novo")||{}).value||"").trim(); }
+/* devolve o id do grupo escolhido; se for "criar grupo novo", cria agora (uma vez só: o grupo criado passa a ser a opção escolhida) */
+async function grupoEscolhido(id){
+  const s=$("#"+id); if(!s) return "";
+  if(s.value!==NOVO_GRUPO) return s.value;
+  const nome=(($("#"+id+"_novo")||{}).value||"").trim();
+  if(!nome) throw new Error("Informe o nome do grupo novo.");
+  const igual=(DATA.grupos||[]).find(g=>String(g.nome||"").trim().toLowerCase()===nome.toLowerCase());
+  if(igual) throw new Error(`Já existe o grupo "${igual.nome}" — escolha-o na lista.`);
+  const r=JSON.parse(await servidorCall("apiCriarGrupo",nome));
+  await esperarGrupo(r.id);
+  const op=document.createElement("option"); op.value=r.id; op.textContent=nome;
+  s.insertBefore(op,s.querySelector(`option[value="${NOVO_GRUPO}"]`)); s.value=r.id;
+  const box=$("#"+id+"_novo_box"); if(box) box.style.display="none";
+  toast(`Grupo "${nome}" criado`);
+  return r.id;
+}
 
 function openImportarProjetoJSON(arq){
   const origem=arq.dados.projects[0];
   const destinos=projetosOndePossoImportar();
   const mesmo=destinos.find(p=>p.id===origem.id);
   const grupos=comPermissoes()?gruposOndePossoCriar():[];
-  const podeNovo=podeCriarProjeto() && (!comPermissoes() || grupos.length>0);
+  const podeNovo=podeCriarProjeto() && (!comPermissoes() || grupos.length>0 || podeCriarGrupoAqui());
   if(!podeNovo && !destinos.length){ toast(comPermissoes()&&souAdminMaster&&!grupos.length?"Crie um grupo antes (Administração › Grupos e papéis).":"Você não tem permissão para importar projetos (Escritório de Projetos ou acima).",true,true); return; }
   // padrão é sempre o caminho que não apaga nada: comparar (mesmo projeto) ou criar um novo
   const padrao = mesmo ? "comparar" : (podeNovo ? "novo" : "substituir");
@@ -11471,7 +11909,7 @@ function openImportarProjetoJSON(arq){
       ${mesmo?radio("mesclar","<strong>Mesclar</strong> no mesmo projeto (o do arquivo entra ou atualiza; nada é apagado)"):""}
       ${destinos.length?radio("substituir","<strong>Substituir</strong> um projeto existente pelo do arquivo"):""}
     </div>
-    ${podeNovo&&comPermissoes()?`<div class="field" id="imp_grupo_box"><label>Grupo do projeto novo</label>${selectGrupos("imp_grupo",grupos,grupoPadraoParaNovoProjeto())}</div>`:""}
+    ${podeNovo&&comPermissoes()?`<div class="field" id="imp_grupo_box"><label>Grupo do projeto novo</label>${selectGrupos("imp_grupo",grupos,grupoPadraoParaNovoProjeto(),true)}</div>`:""}
     ${destinos.length?`<div class="field" id="imp_alvo_box"><label>Projeto de destino</label><select id="imp_alvo">${destinos.map(p=>`<option value="${esc(p.id)}" ${p.id===origem.id?"selected":""}>${esc(p.name)}${p.id===origem.id?" (o mesmo do arquivo)":""}</option>`).join("")}</select></div>`:""}`,
     `<button class="btn" id="imp_cancel">Cancelar</button><button class="btn primary" id="imp_ok">Importar</button>`,true);
   const modo=()=>{ const r=$("input[name='imp_modo']:checked"); return r?r.value:""; };
@@ -11482,17 +11920,18 @@ function openImportarProjetoJSON(arq){
     if(a) a.style.display=m==="substituir"?"":"none";
     const ok=$("#imp_ok"); if(ok) ok.textContent=m==="comparar"?"Comparar":"Importar";
   };
-  $$("input[name='imp_modo']").forEach(r=>r.onchange=ajustar); ajustar();
+  $$("input[name='imp_modo']").forEach(r=>r.onchange=ajustar); ajustar(); ligarSelectGrupos("imp_grupo");
   $("#imp_cancel").onclick=openExportarImportarModal;
   $("#imp_ok").onclick=async()=>{
     const m=modo(); if(!m){ toast("Escolha como importar",true); return; }
     if(m==="comparar"){ openSelecaoDoArquivo(arq,()=>openImportarProjetoJSON(arq)); return; }
+    if(m==="novo" && nomeDoGrupoNovoFaltando("imp_grupo")){ toast("Informe o nome do grupo novo",true); $("#imp_grupo_novo").focus(); return; }
     const btn=$("#imp_ok"); btn.disabled=true; btn.textContent="Importando…";
     let chaveTrava=null;
     try{
       let novoPid;
       if(m==="novo"){
-        const gid=comPermissoes()?($("#imp_grupo")||{}).value:"";
+        const gid=comPermissoes()?await grupoEscolhido("imp_grupo"):"";
         if(comPermissoes() && !gid) throw new Error("Escolha o grupo do projeto.");
         novoPid=importarProjetoComoNovo(arq,gid);
       }else{
@@ -11537,14 +11976,16 @@ function openImportarBaseJSON(arq){
       <label class="radio-linha"><input type="radio" name="impb_modo" value="mesclar"> <strong>Mesclar</strong>: o que está no arquivo entra ou atualiza; nada é apagado</label>
       <label class="radio-linha"><input type="radio" name="impb_modo" value="substituir"> <strong>Substituir tudo</strong>: a base fica igual ao arquivo (projetos que não estão nele são excluídos)</label>
     </div>
-    ${semGrupo?`<div class="field"><label>${semGrupo} projeto(s) do arquivo são de grupos que não existem aqui — colocar no grupo</label>${selectGrupos("impb_grupo",grupos,grupos[0]&&grupos[0].id)}</div>`:""}
+    ${semGrupo?`<div class="field"><label>${semGrupo} projeto(s) do arquivo são de grupos que não existem aqui — colocar no grupo</label>${selectGrupos("impb_grupo",grupos,grupos[0]&&grupos[0].id,true)}</div>`:""}
     ${arq.configuracoes?`<label class="radio-linha"><input type="checkbox" id="impb_cfg"> Usar também as <strong>configurações</strong> do arquivo (perspectivas, listas, campos da TAP)</label>`:""}`,
     `<button class="btn" id="impb_cancel">Cancelar</button><button class="btn primary" id="impb_ok">Continuar</button>`,true);
   $("#impb_cancel").onclick=openExportarImportarModal;
+  ligarSelectGrupos("impb_grupo");
   $("#impb_ok").onclick=async()=>{
     const m=($("input[name='impb_modo']:checked")||{}).value;
     if(m==="comparar"){ openSelecaoDoArquivo(arq,()=>openImportarBaseJSON(arq)); return; }
     if(semGrupo && !($("#impb_grupo")||{}).value){ toast("Crie um grupo antes (Administração › Grupos e papéis)",true,true); return; }
+    if(semGrupo && nomeDoGrupoNovoFaltando("impb_grupo")){ toast("Informe o nome do grupo novo",true); $("#impb_grupo_novo").focus(); return; }
     const aviso = m==="substituir"
       ? `Substituir a base inteira pelo arquivo?\n\n${DATA.projects.filter(p=>!arq.dados.projects.some(x=>x.id===p.id)).length} projeto(s) que não estão no arquivo serão EXCLUÍDOS. Antes, uma cópia da base atual será baixada para o seu computador.`
       : `Mesclar o arquivo na base atual?\n\nAntes, uma cópia da base atual será baixada para o seu computador.`;
@@ -11553,11 +11994,12 @@ function openImportarBaseJSON(arq){
     let travas=[];
     try{
       // ninguém editando os projetos que vão mudar (no substituir: todos)
+      const grupoNovos = semGrupo ? await grupoEscolhido("impb_grupo") : "";
       const afetados = m==="substituir" ? DATA.projects.map(p=>p.id) : arq.dados.projects.map(p=>p.id).filter(id=>projOf(id));
       travas=await travarProjetos(afetados);
       if(MODE==="servidor" && salvamentosEmCurso===0) await loadData(false);
       await baixarCopiaDeSeguranca(null);
-      importarBase(arq,m,($("#impb_grupo")||{}).value||"");
+      importarBase(arq,m,grupoNovos);
       if($("#impb_cfg") && $("#impb_cfg").checked && arq.configuracoes) await gravarConfiguracoes(arq.configuracoes);
       const ok=await persist();
       if(!ok){ await loadData(false); render(); throw new Error("a gravação não terminou — os dados foram recarregados do servidor; confira antes de tentar de novo"); }
@@ -11782,6 +12224,9 @@ function aplicarNomeDoApp(){
   initMobile();
   applyReadOnly();
   await loadData(false);
+  // projetos antigos ganham o formato de acesso com grupos convidados (em segundo plano)
+  if(BACKEND && BACKEND.tipo==="firestore" && BACKEND.extensoes && BACKEND.extensoes.apiMigrarAcesso)
+    servidorCall("apiMigrarAcesso").then(r=>{ try{ if(JSON.parse(r).migrados) loadData(false).then(render); }catch(e){} }).catch(()=>{});
   if(MODE!=="servidor" && !me) askName();
   render();
   setInterval(poll, POLL_MS);
