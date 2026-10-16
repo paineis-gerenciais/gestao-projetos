@@ -1,0 +1,269 @@
+rules_version = '2';
+
+// ============================================================
+// Gestão de Projetos — regras de segurança do Cloud Firestore
+//
+// É AQUI que as permissões valem de verdade: o que a tela esconde, o
+// servidor também recusa. Mesma tabela de papéis do app:
+//
+//   admin_grupo (6) > escritorio (5) > gestor (4) > equipe (3)
+//   > patrocinador (2) > leitura (1) > convidado (0)
+//
+// ANTES DE PUBLICAR: troque paineisgerenciais@gmail.com (função ehAdminInicial)
+// pelo e-mail do primeiro Administrador do sistema -- o mesmo do
+// adminInicial no config.js. O script de publicação recusa o marcador.
+// ============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- quem está pedindo ----------
+    function logado() { return request.auth != null && request.auth.token.email is string; }
+    function meuEmail() { return request.auth.token.email.lower(); }
+    // Google e link por e-mail já vêm confirmados; e-mail e senha, só depois do link de confirmação
+    function verificado() { return logado() && request.auth.token.email_verified == true; }
+    function ehAdminInicial() { return verificado() && meuEmail() == 'paineisgerenciais@gmail.com'.lower(); }
+    function docAdmins() { return /databases/$(database)/documents/config/admins; }
+    function docUsuario(email) { return /databases/$(database)/documents/usuarios/$(email); }
+    function desativado() {
+      return exists(docUsuario(meuEmail())) && get(docUsuario(meuEmail())).data.get('ativo', true) != true;
+    }
+    function ehAdmin() {
+      return ehAdminInicial()
+        || (verificado() && exists(docAdmins()) && meuEmail() in get(docAdmins()).data.emails && !desativado());
+    }
+    function cadastrado() {
+      return ehAdmin()
+        || (verificado() && exists(docUsuario(meuEmail())) && get(docUsuario(meuEmail())).data.ativo == true);
+    }
+
+    // ---------- papéis ----------
+    function nivel(p) {
+      return p == 'admin_grupo' ? 6 : p == 'escritorio' ? 5 : p == 'gestor' ? 4 : p == 'equipe' ? 3
+        : p == 'patrocinador' ? 2 : p == 'leitura' ? 1 : p == 'convidado' ? 0 : -1;
+    }
+    function papelEm(mapa) { return mapa is map && meuEmail() in mapa ? mapa[meuEmail()] : ''; }
+    function grupo(gid) { return get(/databases/$(database)/documents/grupos/$(gid)).data; }
+    function nivelNoGrupo(gid) {
+      return gid is string && gid != '' && exists(/databases/$(database)/documents/grupos/$(gid))
+        ? nivel(papelEm(grupo(gid).membros)) : -1;
+    }
+    function membrosDepois(gid) {
+      return gid is string && gid != '' && existsAfter(/databases/$(database)/documents/grupos/$(gid))
+        ? getAfter(/databases/$(database)/documents/grupos/$(gid)).data.membrosEmails : [];
+    }
+    function excecoesValidas(mapa) {
+      return mapa is map && mapa.values().hasOnly(['escritorio','gestor','equipe','patrocinador','leitura','convidado']);
+    }
+    function papeisValidos(mapa, comConvidado) {
+      return mapa is map && mapa.values().hasOnly(comConvidado
+        ? ['admin_grupo','escritorio','gestor','equipe','patrocinador','leitura','convidado']
+        : ['admin_grupo','escritorio','gestor','equipe','patrocinador','leitura']);
+    }
+    // nível mínimo para EDITAR cada seção do projeto
+    function nivelParaEditar(secao) {
+      return secao == 'cronograma' ? 3 : secao == 'linhaBase' ? 5 : 4;
+    }
+
+    // ---------- projetos ----------
+    match /projetos/{pid} {
+      function cabecalho() { return get(/databases/$(database)/documents/projetos/$(pid)).data; }
+      function meuNivel() { return nivel(papelEm(cabecalho().papeis)); }
+      function podeVer() { return cadastrado() && (ehAdmin() || meuEmail() in cabecalho().leitores); }
+      // campos de acesso: só a administração mexe
+      function campos_de_acesso() { return ['papeis','leitores','excecoes','grupoId','criadoEm','criadoPor']; }
+
+      // get de um projeto que ainda não existe: a transação de criação lê antes de gravar
+      allow get: if cadastrado() && (ehAdmin() || resource == null || meuEmail() in resource.data.leitores);
+      allow list: if cadastrado() && (ehAdmin() || meuEmail() in resource.data.leitores);
+      // criar: a Administração, ou o Escritório de Projetos (ou acima) do grupo. Quem cria não
+      // escolhe o acesso: o projeto nasce com exatamente as pessoas e papéis do grupo.
+      allow create: if cadastrado() && request.resource.data.leitores is list
+        && request.resource.data.leitores.toSet() == request.resource.data.papeis.keys().toSet()
+        && papeisValidos(request.resource.data.papeis, true)
+        && (ehAdmin()
+            || (nivelNoGrupo(request.resource.data.grupoId) >= 5
+                && request.resource.data.criadoPor == meuEmail()
+                && request.resource.data.get('excecoes', {}).size() == 0
+        && request.resource.data.get('grupoId', '') is string
+                && request.resource.data.papeis == grupo(request.resource.data.grupoId).membros));
+      allow update: if cadastrado() && (
+          ehAdmin()
+          // Gestor ou acima: dados do projeto e TAP, sem tocar no acesso
+          || (nivel(papelEm(resource.data.papeis)) >= 4
+              && !request.resource.data.diff(resource.data).affectedKeys().hasAny(campos_de_acesso()))
+          // Administrador do GRUPO do projeto: também o acesso (exceções), sem mudar o grupo.
+          //   Quem tem acesso = exatamente as pessoas do grupo + as exceções.
+          //   (o grupo é lido DEPOIS da gravação: ao salvar o grupo, os projetos vão no mesmo lote)
+          || (nivelNoGrupo(resource.data.grupoId) >= 6
+              && request.resource.data.grupoId == resource.data.grupoId
+              && papeisValidos(request.resource.data.papeis, true)
+              && excecoesValidas(request.resource.data.get('excecoes', {}))
+              && request.resource.data.leitores.toSet() == request.resource.data.papeis.keys().toSet()
+              && request.resource.data.leitores.toSet()
+                   == membrosDepois(request.resource.data.grupoId).toSet().union(request.resource.data.get('excecoes', {}).keys().toSet()))
+        );
+      allow delete: if cadastrado() && (ehAdmin() || nivel(papelEm(resource.data.papeis)) >= 5);
+
+      // seções: cronograma, eap, riscos, custos, stakeholders, responsabilidade, linhaBase
+      match /secoes/{secao} {
+        allow read: if podeVer() && (secao != 'custos' || ehAdmin() || meuNivel() >= 1);
+        allow write: if cadastrado() && (ehAdmin() || meuNivel() >= nivelParaEditar(secao));
+      }
+      // linhas de base substituídas: só se acrescentam (ninguém reescreve o histórico)
+      match /historicoLinhaBase/{hid} {
+        allow read: if podeVer();
+        allow create: if cadastrado() && (ehAdmin() || meuNivel() >= 5);
+        allow update: if false;
+        allow delete: if cadastrado() && (ehAdmin() || meuNivel() >= 5)
+          && !existsAfter(/databases/$(database)/documents/projetos/$(pid));   // só ao excluir o projeto
+      }
+      // travas de edição: cada pessoa só grava a própria; trava vencida (pelo relógio do servidor) pode ser assumida
+      match /travas/{secao} {
+        allow read: if podeVer();
+        allow create, update: if cadastrado() && (ehAdmin() || meuNivel() >= (secao == 'tudo' ? 5 : nivelParaEditar(secao)))
+          && request.resource.data.email == meuEmail()
+          && request.resource.data.expiraEm is timestamp
+          && request.resource.data.expiraEm <= request.time + duration.value(15, 'm')
+          && (resource == null || resource.data.email == meuEmail() || resource.data.expiraEm < request.time);
+        allow delete: if cadastrado() && (
+          resource == null || resource.data.email == meuEmail() || resource.data.expiraEm < request.time
+          || ehAdmin() || meuNivel() >= 5);
+      }
+    }
+
+    // ---------- portfólios ----------
+    match /portfolios/{id} {
+      allow read: if cadastrado();
+      allow create: if cadastrado() && (ehAdmin() || nivelNoGrupo(request.resource.data.get('grupoId', '')) >= 5);
+      allow update: if cadastrado() && (ehAdmin()
+        || (nivelNoGrupo(resource.data.get('grupoId', '')) >= 5
+            && request.resource.data.get('grupoId', '') == resource.data.get('grupoId', '')));
+      allow delete: if cadastrado() && (ehAdmin() || nivelNoGrupo(resource.data.get('grupoId', '')) >= 5);
+    }
+
+    // ---------- grupos ----------
+    match /grupos/{gid} {
+      function coerente(d) {
+        return d.membros is map && d.membrosEmails is list
+          && d.membrosEmails.toSet() == d.membros.keys().toSet()
+          && papeisValidos(d.membros, false);
+      }
+      allow read: if cadastrado() && (ehAdmin() || meuEmail() in resource.data.membrosEmails);
+      allow create: if ehAdmin() && coerente(request.resource.data);
+      allow delete: if ehAdmin();
+      allow update: if cadastrado() && coerente(request.resource.data) && (
+        ehAdmin()
+        || (papelEm(resource.data.membros) == 'admin_grupo'
+            && request.resource.data.nome == resource.data.nome
+            // o administrador do grupo não pode se tirar da administração do próprio grupo
+            && papelEm(request.resource.data.membros) == 'admin_grupo'));
+    }
+
+    // ---------- pessoas ----------
+    match /usuarios/{email} {
+      allow get: if verificado() && (email == meuEmail() || cadastrado());
+      allow list: if ehAdmin();
+      allow create: if cadastrado() && request.resource.data.email == email && email == email.lower()
+        && (ehAdmin()
+            || (nivelNoGrupo(request.resource.data.criadoPorGrupo) >= 6
+                && request.resource.data.ativo == true
+                && request.resource.data.criadoPor == meuEmail()));
+      allow update: if ehAdmin()
+        || (verificado() && email == meuEmail()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nome']));
+      allow delete: if ehAdmin();
+    }
+
+    // ---------- configuração ----------
+    match /config/aparencia {            // logotipo: aparece antes do login
+      allow read: if true;
+      allow delete: if ehAdmin();
+      allow create, update: if ehAdmin()
+        && request.resource.data.keys().hasOnly(['logo','icone','atualizadoPor','atualizadoEm'])
+        && request.resource.data.logo is string && request.resource.data.logo.size() <= 500000
+        && request.resource.data.get('icone', '') is string && request.resource.data.get('icone', '').size() <= 500000;
+    }
+    match /config/admins {
+      allow read: if verificado() && (cadastrado() || (resource != null && meuEmail() in resource.data.emails));
+      allow write: if ehAdmin() && request.resource.data.emails is list;
+    }
+    match /config/geral {                // listas, campos da TAP, perspectivas
+      allow read: if cadastrado();
+      allow write: if ehAdmin()
+        || (cadastrado()
+            && request.resource.data.diff(resource == null ? {} : resource.data).affectedKeys().hasOnly(['customTapYears','escritaId'])
+            && request.resource.data.customTapYears.hasAll(resource == null ? [] : resource.data.get('customTapYears', [])));
+    }
+    match /config/pessoas {              // sugestões de nomes: os demais só SOMAM nomes (e reexibem)
+      allow read: if cadastrado();
+      allow write: if ehAdmin()
+        || (cadastrado()
+            && request.resource.data.diff(resource == null ? {} : resource.data).affectedKeys().hasOnly(['people','peopleHidden','escritaId'])
+            && request.resource.data.get('people', []).hasAll(resource == null ? [] : resource.data.get('people', []))
+            && (resource == null ? [] : resource.data.get('peopleHidden', [])).hasAll(request.resource.data.get('peopleHidden', [])));
+    }
+
+    // ---------- pedidos (acesso, exclusões, linha de base) ----------
+    match /pedidos/{id} {
+      function camposPedido() {
+        return ['tipo','status','solicitante','solicitanteNome','mensagem','justificativa','destinatarios','grupoId',
+                'projetoId','portfolioId','acao','criadoEm','criadoEmIso','resposta','atendidoPor','atendidoEm'];
+      }
+      function textoCurto(d, k, max) { return d.get(k, '') is string && d.get(k, '').size() <= max; }
+      function pedidoBemFormado(d) {
+        return d.keys().hasOnly(camposPedido())
+          && d.solicitante == meuEmail()
+          && d.status == 'aberto'
+          && d.tipo in ['acesso','exclusao_projeto','exclusao_portfolio','linha_base']
+          && textoCurto(d, 'mensagem', 1000) && textoCurto(d, 'justificativa', 1000)
+          && textoCurto(d, 'solicitanteNome', 200) && textoCurto(d, 'acao', 200)
+          && textoCurto(d, 'grupoId', 100) && textoCurto(d, 'projetoId', 100) && textoCurto(d, 'portfolioId', 100)
+          && d.destinatarios is list && d.destinatarios.size() <= 20;
+      }
+      // pedido de acesso: UM por pessoa (id fixo "acesso_<e-mail>"), sem destinatários escolhidos
+      // por quem pede (quem atende é a Administração); os demais pedidos, só quem tem cadastro
+      allow create: if verificado() && pedidoBemFormado(request.resource.data) && (
+        (request.resource.data.tipo == 'acesso' && id == 'acesso_' + meuEmail() && request.resource.data.destinatarios.size() == 0)
+        || (request.resource.data.tipo != 'acesso' && cadastrado()));
+      // pedir acesso de novo, depois de um pedido já respondido
+      allow update: if verificado() && id == 'acesso_' + meuEmail()
+        && resource.data.status != 'aberto'
+        && pedidoBemFormado(request.resource.data)
+        && request.resource.data.tipo == 'acesso' && request.resource.data.destinatarios.size() == 0;
+      allow get: if verificado() && (
+        (resource == null && id == 'acesso_' + meuEmail())
+        || (resource != null && (resource.data.solicitante == meuEmail() || ehAdmin()
+            || (cadastrado() && meuEmail() in resource.data.destinatarios))));
+      allow list: if verificado() && (
+        resource.data.solicitante == meuEmail() || ehAdmin()
+        || (cadastrado() && meuEmail() in resource.data.destinatarios));
+      // responder: uma vez só, em nome próprio
+      allow update: if cadastrado() && (ehAdmin() || meuEmail() in resource.data.destinatarios)
+        && resource.data.status == 'aberto'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','resposta','atendidoPor','atendidoEm'])
+        && request.resource.data.status in ['atendido','recusado']
+        && request.resource.data.atendidoPor == meuEmail()
+        && textoCurto(request.resource.data, 'resposta', 1000);
+      allow delete: if ehAdmin();
+    }
+
+    // ---------- fila de e-mails (enviados pela tarefa agendada) ----------
+    // O app só ACRESCENTA mensagens; quem lê e envia é a tarefa agendada
+    // (Apps Script), que acessa o banco com a conta do dono do projeto Google.
+    match /fila/{id} {
+      // limites de volume e de destinatários por pessoa ficam na tarefa agendada (ver apps-script/)
+      allow create: if cadastrado()
+        && request.resource.data.keys().hasOnly(['status','tipo','para','assunto','html','anexoHtml','nomeAnexo','criadoPor','criadoEm','criadoEmMs'])
+        && request.resource.data.status == 'pendente'
+        && request.resource.data.tipo in ['aviso','pedido','resposta_pedido','relatorio']
+        && request.resource.data.criadoPor == meuEmail()
+        && request.resource.data.para is list && request.resource.data.para.size() >= 1 && request.resource.data.para.size() <= 50
+        && request.resource.data.get('assunto', '') is string && request.resource.data.get('assunto', '').size() <= 300
+        && request.resource.data.get('html', '') is string && request.resource.data.get('html', '').size() <= 200000
+        && request.resource.data.get('anexoHtml', '') is string && request.resource.data.get('anexoHtml', '').size() <= 700000
+        && request.resource.data.get('nomeAnexo', '') is string && request.resource.data.get('nomeAnexo', '').size() <= 200;
+      allow read, update, delete: if false;
+    }
+  }
+}
